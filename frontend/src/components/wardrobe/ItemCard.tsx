@@ -23,7 +23,7 @@ export function ItemCard({ item, onEdit, onRemove }: Props) {
         <div className="flex items-center justify-between gap-2 px-3 py-2.5">
           <div className="min-w-0">
             <h3 className="truncate font-sans text-sm font-medium text-cocoa">{item.name}</h3>
-            <p className="truncate text-[11px] text-cocoa/50">{item.color}</p>
+            <p className="truncate text-[11px] text-cocoa/50">{[item.colors.join(', '), item.fabric].filter(Boolean).join(' · ')}</p>
           </div>
           <button
             type="button"

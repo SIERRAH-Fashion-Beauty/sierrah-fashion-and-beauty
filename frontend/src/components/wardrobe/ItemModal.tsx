@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { ImagePlus, Loader2, Trash2, Upload } from 'lucide-react';
-import { CATEGORIES, OCCASIONS, STYLES } from '../../data/options';
+import { CATEGORIES, COMFORT_RATINGS, ITEM_OCCASIONS, STYLES } from '../../data/options';
 import { useApp } from '../../context/AppContext';
 import { fileToCompactDataUrl } from '../../lib/imageFile';
-import type { WardrobeCategory, WardrobeItem } from '../../types';
+import type { ConcreteOccasion, StyleId, WardrobeCategory, WardrobeItem } from '../../types';
 import { CategoryIcon } from '../ui/icons';
 import { Modal } from '../ui/Modal';
 import { SmartImage } from '../ui/SmartImage';
@@ -15,27 +15,38 @@ interface Props {
   onClose: () => void;
 }
 
-const OCCASION_TAGS = OCCASIONS.filter((o) => o.id !== 'custom').map((o) => ({ id: o.id as string, label: o.label }));
-const STYLE_TAGS = STYLES.map((s) => ({ id: s.id as string, label: s.label }));
-const KNOWN_TAGS = new Set([...OCCASION_TAGS, ...STYLE_TAGS].map((t) => t.id));
+const FABRIC_SUGGESTIONS = ['Cotton', 'Silk', 'Linen', 'Denim', 'Chiffon', 'Georgette', 'Crepe', 'Rayon', 'Polyester', 'Wool', 'Canvas', 'Faux leather', 'Leather', 'Metal', 'Net', 'Velvet'];
 const COLOR_SUGGESTIONS = ['Black', 'White', 'Beige', 'Cream', 'Pink', 'Purple', 'Blue', 'Navy', 'Green', 'Red', 'Maroon', 'Yellow', 'Brown', 'Grey', 'Gold', 'Silver', 'Rose Gold', 'Multicolor'];
 
 interface Form {
   name: string;
   category: WardrobeCategory;
-  color: string;
-  tags: string[];
+  subcategory: string;
+  /** Comma-separated in the input, stored as a list. */
+  colors: string;
+  styles: StyleId[];
+  occasions: ConcreteOccasion[];
+  fabric: string;
+  comfort: number;
+  price: string;
+  tags: string;
   brand: string;
   notes: string;
   image: string;
 }
 
-const blank = (image = ''): Form => ({ name: '', category: 'tops', color: '', tags: [], brand: '', notes: '', image });
+const blank = (image = ''): Form => ({
+  name: '', category: 'tops', subcategory: '', colors: '', styles: [], occasions: [], fabric: '',
+  comfort: 3, price: '', tags: '', brand: '', notes: '', image,
+});
+
+const splitList = (text: string): string[] =>
+  Array.from(new Set(text.split(',').map((t) => t.trim()).filter(Boolean)));
 
 export function ItemModal({ open, editing, initialImage, onClose }: Props) {
   const { addItem, updateItem, showToast } = useApp();
   const [form, setForm] = useState<Form>(blank());
-  const [errors, setErrors] = useState<{ name?: string; image?: string }>({});
+  const [errors, setErrors] = useState<{ name?: string; image?: string; price?: string }>({});
   const [uploading, setUploading] = useState(false);
   const [dragging, setDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -48,8 +59,14 @@ export function ItemModal({ open, editing, initialImage, onClose }: Props) {
         ? {
             name: editing.name,
             category: editing.category,
-            color: editing.color,
-            tags: editing.tags,
+            subcategory: editing.subcategory,
+            colors: editing.colors.join(', '),
+            styles: editing.styles,
+            occasions: editing.occasions,
+            fabric: editing.fabric,
+            comfort: editing.comfort,
+            price: editing.price != null ? String(editing.price) : '',
+            tags: editing.tags.join(', '),
             brand: editing.brand ?? '',
             notes: editing.notes ?? '',
             image: editing.image,
@@ -59,8 +76,10 @@ export function ItemModal({ open, editing, initialImage, onClose }: Props) {
   }, [open, editing, initialImage]);
 
   const set = <K extends keyof Form>(key: K, value: Form[K]) => setForm((f) => ({ ...f, [key]: value }));
-  const toggleTag = (id: string) =>
-    set('tags', form.tags.includes(id) ? form.tags.filter((t) => t !== id) : [...form.tags, id]);
+  const toggle = <T extends string>(key: 'styles' | 'occasions', id: T) => {
+    const list = form[key] as string[];
+    set(key, (list.includes(id) ? list.filter((t) => t !== id) : [...list, id]) as never);
+  };
 
   async function handleFile(file?: File | null) {
     if (!file) return;
@@ -83,11 +102,23 @@ export function ItemModal({ open, editing, initialImage, onClose }: Props) {
       setErrors({ name: 'Please give this item a name.' });
       return;
     }
+    const price = form.price.trim() === '' ? null : Number(form.price);
+    if (price !== null && (!Number.isFinite(price) || price < 0)) {
+      setErrors({ price: 'Enter a price of 0 or more, or leave it empty.' });
+      return;
+    }
+    const colors = splitList(form.colors);
     const payload = {
       name,
       category: form.category,
-      color: form.color.trim() || 'Multicolor',
-      tags: Array.from(new Set(form.tags.map((t) => t.toLowerCase()))),
+      subcategory: form.subcategory.trim().toLowerCase(),
+      colors: colors.length ? colors : ['Multicolor'],
+      styles: form.styles,
+      occasions: form.occasions,
+      fabric: form.fabric.trim(),
+      comfort: form.comfort,
+      price,
+      tags: splitList(form.tags.toLowerCase()),
       brand: form.brand.trim() || undefined,
       notes: form.notes.trim() || undefined,
       image: form.image,
@@ -101,8 +132,6 @@ export function ItemModal({ open, editing, initialImage, onClose }: Props) {
     }
     onClose();
   }
-
-  const extraTags = form.tags.filter((t) => !KNOWN_TAGS.has(t));
 
   return (
     <Modal
@@ -234,40 +263,104 @@ export function ItemModal({ open, editing, initialImage, onClose }: Props) {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="item-color" className="label">
-                Colour
+                Colours
               </label>
               <input
                 id="item-color"
                 className="input"
                 list="color-suggestions"
-                value={form.color}
-                placeholder="e.g. Lavender"
-                onChange={(e) => set('color', e.target.value)}
+                value={form.colors}
+                placeholder="e.g. Lavender, White"
+                onChange={(e) => set('colors', e.target.value)}
               />
               <datalist id="color-suggestions">
                 {COLOR_SUGGESTIONS.map((c) => (
                   <option key={c} value={c} />
                 ))}
               </datalist>
+              <p className="mt-1 text-[11px] text-cocoa/45">Separate several colours with commas.</p>
             </div>
             <div>
-              <label htmlFor="item-brand" className="label">
-                Brand <span className="font-normal normal-case tracking-normal text-cocoa/40">(optional)</span>
+              <label htmlFor="item-sub" className="label">
+                Type
               </label>
-              <input id="item-brand" className="input" value={form.brand} maxLength={40} onChange={(e) => set('brand', e.target.value)} />
+              <input
+                id="item-sub"
+                className="input"
+                value={form.subcategory}
+                maxLength={40}
+                placeholder="e.g. kurti, jeans, sneakers"
+                onChange={(e) => set('subcategory', e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="item-fabric" className="label">
+                Fabric
+              </label>
+              <input
+                id="item-fabric"
+                className="input"
+                list="fabric-suggestions"
+                value={form.fabric}
+                maxLength={40}
+                placeholder="e.g. Cotton"
+                onChange={(e) => set('fabric', e.target.value)}
+              />
+              <datalist id="fabric-suggestions">
+                {FABRIC_SUGGESTIONS.map((f) => (
+                  <option key={f} value={f} />
+                ))}
+              </datalist>
+            </div>
+            <div>
+              <label htmlFor="item-price" className="label">
+                Price paid <span className="font-normal normal-case tracking-normal text-cocoa/40">(optional, ₹)</span>
+              </label>
+              <input
+                id="item-price"
+                className="input"
+                inputMode="decimal"
+                value={form.price}
+                placeholder="e.g. 899"
+                onChange={(e) => set('price', e.target.value)}
+                aria-invalid={!!errors.price}
+              />
+              {errors.price && (
+                <p role="alert" className="mt-1 text-xs text-rosebrown">
+                  {errors.price}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <span className="label">Comfort</span>
+            <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Comfort level">
+              {COMFORT_RATINGS.map((c) => (
+                <button
+                  key={c.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={form.comfort === c.value}
+                  onClick={() => set('comfort', c.value)}
+                  className={`pill px-3 py-1.5 text-xs ${form.comfort === c.value ? 'pill-active' : ''}`}
+                >
+                  {c.label}
+                </button>
+              ))}
             </div>
           </div>
 
           <div>
             <span className="label">Best for</span>
             <div className="flex flex-wrap gap-2">
-              {OCCASION_TAGS.map((t) => (
+              {ITEM_OCCASIONS.map((t) => (
                 <button
                   key={t.id}
                   type="button"
-                  aria-pressed={form.tags.includes(t.id)}
-                  onClick={() => toggleTag(t.id)}
-                  className={`pill px-3 py-1.5 text-xs ${form.tags.includes(t.id) ? 'pill-active' : ''}`}
+                  aria-pressed={form.occasions.includes(t.id)}
+                  onClick={() => toggle('occasions', t.id)}
+                  className={`pill px-3 py-1.5 text-xs ${form.occasions.includes(t.id) ? 'pill-active' : ''}`}
                 >
                   {t.label}
                 </button>
@@ -278,21 +371,33 @@ export function ItemModal({ open, editing, initialImage, onClose }: Props) {
           <div>
             <span className="label">Style</span>
             <div className="flex flex-wrap gap-2">
-              {STYLE_TAGS.map((t) => (
+              {STYLES.map((t) => (
                 <button
                   key={t.id}
                   type="button"
-                  aria-pressed={form.tags.includes(t.id)}
-                  onClick={() => toggleTag(t.id)}
-                  className={`pill px-3 py-1.5 text-xs ${form.tags.includes(t.id) ? 'pill-active' : ''}`}
+                  aria-pressed={form.styles.includes(t.id)}
+                  onClick={() => toggle('styles', t.id)}
+                  className={`pill px-3 py-1.5 text-xs ${form.styles.includes(t.id) ? 'pill-active' : ''}`}
                 >
                   {t.label}
                 </button>
               ))}
             </div>
-            {extraTags.length > 0 && (
-              <p className="mt-2 text-xs text-cocoa/50">Also tagged: {extraTags.join(', ')}</p>
-            )}
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="item-tags" className="label">
+                Tags <span className="font-normal normal-case tracking-normal text-cocoa/40">(optional)</span>
+              </label>
+              <input id="item-tags" className="input" value={form.tags} maxLength={120} placeholder="e.g. festive, handloom" onChange={(e) => set('tags', e.target.value)} />
+            </div>
+            <div>
+              <label htmlFor="item-brand" className="label">
+                Brand <span className="font-normal normal-case tracking-normal text-cocoa/40">(optional)</span>
+              </label>
+              <input id="item-brand" className="input" value={form.brand} maxLength={40} onChange={(e) => set('brand', e.target.value)} />
+            </div>
           </div>
 
           <div>

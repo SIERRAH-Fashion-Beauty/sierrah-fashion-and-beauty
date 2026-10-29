@@ -6,7 +6,7 @@ import { SmartImage } from '../components/ui/SmartImage';
 
 const QUICK_LINKS = [
   { label: 'Fashion', to: '/style', Icon: Shirt },
-  { label: 'Beauty', to: '/wardrobe?category=beauty', Icon: PerfumeIcon },
+  { label: 'Beauty', to: '/wardrobe?category=makeup', Icon: PerfumeIcon },
   { label: 'Accessories', to: '/wardrobe?category=bags', Icon: Handbag },
   { label: 'Styling Tips', to: '/preview', Icon: Lightbulb },
 ];

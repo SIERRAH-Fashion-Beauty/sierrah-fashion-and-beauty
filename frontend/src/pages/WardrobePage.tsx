@@ -40,7 +40,7 @@ export function WardrobePage() {
     return wardrobe.filter(
       (w) =>
         (!category || w.category === category) &&
-        (!q || w.name.toLowerCase().includes(q) || w.color.toLowerCase().includes(q) || w.tags.some((t) => t.includes(q))),
+        (!q || w.name.toLowerCase().includes(q) || w.colors.some((c) => c.toLowerCase().includes(q)) || w.subcategory.toLowerCase().includes(q) || w.fabric.toLowerCase().includes(q) || w.tags.some((t) => t.toLowerCase().includes(q))),
     );
   }, [wardrobe, category, query]);
 
@@ -122,7 +122,7 @@ export function WardrobePage() {
             <input
               type="search"
               className="input pl-10"
-              placeholder="Search by name, colour or tag"
+              placeholder="Search by name, colour, fabric or tag"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               aria-label="Search wardrobe"
