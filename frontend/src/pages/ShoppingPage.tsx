@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Info, ShoppingBag } from 'lucide-react';
 import { FlowSteps } from '../components/layout/FlowSteps';
@@ -8,9 +8,10 @@ import { CategoryIcon } from '../components/ui/icons';
 import { Modal } from '../components/ui/Modal';
 import { SmartImage } from '../components/ui/SmartImage';
 import { useApp } from '../context/AppContext';
-import { BUDGETS, CATEGORIES, OCCASIONS, categoryLabel } from '../data/options';
+import { BUDGETS, CATEGORIES, ITEM_OCCASIONS, categoryLabel } from '../data/options';
 import { SHOP_CATALOG, formatInr } from '../data/shopCatalog';
-import { findMissingItems } from '../lib/stylist';
+import { lookProductIds, ownsSimilar } from '../lib/looks';
+import { api } from '../services/api';
 import type { ShopItem, WardrobeCategory } from '../types';
 
 function ShopCard({ item, tag, onView }: { item: ShopItem; tag?: string; onView: (i: ShopItem) => void }) {
@@ -40,24 +41,36 @@ function ShopCard({ item, tag, onView }: { item: ShopItem; tag?: string; onView:
 }
 
 export function ShoppingPage() {
-  const { wardrobe, displayLook } = useApp();
+  const { wardrobe, displayLook, apiStatus } = useApp();
+  const [catalog, setCatalog] = useState<ShopItem[]>(SHOP_CATALOG);
   const [category, setCategory] = useState<WardrobeCategory | 'all'>('all');
   const [budget, setBudget] = useState<string>('any');
   const [viewing, setViewing] = useState<ShopItem | null>(null);
 
-  const missing = useMemo(() => findMissingItems(wardrobe), [wardrobe]);
+  // The API serves the same demo catalog; the bundled copy is the offline fallback.
+  useEffect(() => {
+    if (apiStatus !== 'online') return;
+    let cancelled = false;
+    api
+      .getCatalog()
+      .then((items) => !cancelled && items.length && setCatalog(items))
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [apiStatus]);
+
+  // Ownership is judged against the wardrobe on screen, so it is right even before a sync.
+  const missing = useMemo(() => catalog.filter((p) => !ownsSimilar(wardrobe, p)), [catalog, wardrobe]);
   const missingIds = useMemo(() => new Set(missing.map((m) => m.id)), [missing]);
-  const lookIds = useMemo(
-    () => new Set(displayLook.items.map((i) => i.shopItemId).filter((x): x is string => !!x)),
-    [displayLook],
-  );
+  const lookIds = useMemo(() => lookProductIds(displayLook), [displayLook]);
 
   const max = BUDGETS.find((b) => b.id === budget)?.max ?? Infinity;
   const passes = (s: ShopItem) => (category === 'all' || s.category === category) && s.price <= max;
 
   const missingShown = missing.filter(passes).sort((a, b) => Number(lookIds.has(b.id)) - Number(lookIds.has(a.id)));
-  const moreShown = SHOP_CATALOG.filter((s) => !missingIds.has(s.id) && passes(s));
-  const categoriesInCatalog = CATEGORIES.filter((c) => SHOP_CATALOG.some((s) => s.category === c.id));
+  const moreShown = catalog.filter((s) => !missingIds.has(s.id) && passes(s));
+  const categoriesInCatalog = CATEGORIES.filter((c) => catalog.some((s) => s.category === c.id));
 
   return (
     <div>
@@ -185,8 +198,26 @@ export function ShoppingPage() {
                 {formatInr(viewing.price)} <span className="ml-1 align-middle text-[10px] font-sans font-semibold uppercase tracking-wider text-cocoa/50">Demo price</span>
               </p>
               <p className="text-cocoa/75">{viewing.description}</p>
+              <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-xs text-cocoa/65">
+                <dt className="font-semibold text-cocoa/80">Category</dt>
+                <dd>{categoryLabel(viewing.category)}{viewing.subcategory ? ` · ${viewing.subcategory}` : ''}</dd>
+                {viewing.colors.length > 0 && (
+                  <>
+                    <dt className="font-semibold text-cocoa/80">Colours</dt>
+                    <dd>{viewing.colors.join(', ')}</dd>
+                  </>
+                )}
+                {viewing.fabric && (
+                  <>
+                    <dt className="font-semibold text-cocoa/80">Fabric</dt>
+                    <dd>{viewing.fabric}</dd>
+                  </>
+                )}
+                <dt className="font-semibold text-cocoa/80">Comfort</dt>
+                <dd>{viewing.comfort} / 5</dd>
+              </dl>
               <p className="text-xs text-cocoa/55">
-                Styles well for: {viewing.occasions.map((o) => OCCASIONS.find((x) => x.id === o)?.label).join(', ')}
+                Styles well for: {viewing.occasions.map((o) => ITEM_OCCASIONS.find((x) => x.id === o)?.label).join(', ')}
               </p>
               <p className="rounded-xl bg-blush/50 p-3 text-xs leading-relaxed text-rosebrown">
                 SIERRAH is not connected to live retailers yet, so there is no real listing, stock or checkout for this product. This card shows how smart suggestions will look.

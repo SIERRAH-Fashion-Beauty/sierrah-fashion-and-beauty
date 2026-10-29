@@ -1,16 +1,16 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Check, Loader2, Plus, Sparkles } from 'lucide-react';
+import { Check, ChevronDown, Loader2, Plus, Sparkles, TriangleAlert } from 'lucide-react';
 import { FlowSteps } from '../components/layout/FlowSteps';
 import { FloralBranch } from '../components/ui/Floral';
 import { useApp } from '../context/AppContext';
-import { BUDGETS, COLOR_OPTIONS, PREFERENCES, STYLES, occasionLabel } from '../data/options';
+import { APPEARANCE_OPTIONS, BUDGETS, COLOR_OPTIONS, PREFERENCES, STYLES, occasionLabel } from '../data/options';
 import type { PreferenceId } from '../types';
 
 const hexFor = (name: string) => COLOR_OPTIONS.find((c) => c.name.toLowerCase() === name.toLowerCase())?.hex ?? name.toLowerCase();
 
 export function PersonalizePage() {
-  const { preferences, patchPreferences, generate, generating, showToast } = useApp();
+  const { preferences, patchPreferences, modelOptions, patchModelOptions, generate, generating, generateError, imageStatus, showToast } = useApp();
   const navigate = useNavigate();
   const [adding, setAdding] = useState(false);
   const [customColor, setCustomColor] = useState('');
@@ -47,7 +47,7 @@ export function PersonalizePage() {
       await generate();
       navigate('/look');
     } catch {
-      showToast('We could not create your look. Please try again.', 'error');
+      /* the reason is shown under the button; the form keeps every choice so the user can retry */
     }
   }
 
@@ -73,7 +73,7 @@ export function PersonalizePage() {
             <p className="mt-3 text-sm">
               <span className="text-cocoa/55">Occasion:</span>{' '}
               <span className="rounded-full bg-blush/70 px-3 py-1 text-xs font-medium text-rosebrown">
-                {occasionLabel(preferences.occasion, preferences.customOccasion)}
+                {occasionLabel(preferences.occasion, preferences.customOccasion ?? undefined)}
               </span>{' '}
               <Link to="/style" className="ml-1 text-xs text-rosebrown underline underline-offset-2">
                 Change
@@ -223,6 +223,77 @@ export function PersonalizePage() {
             />
             <p className="mt-1 text-right text-[11px] text-cocoa/40">{preferences.notes.length}/240</p>
           </div>
+
+          <details className="group rounded-2xl border border-dusty/50 bg-white/60">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-serif text-xl text-cocoa [&::-webkit-details-marker]:hidden">
+              <span>
+                Model Appearance <span className="font-sans text-xs font-normal text-cocoa/45">(optional)</span>
+              </span>
+              <ChevronDown size={18} className="text-rosebrown transition group-open:rotate-180" />
+            </summary>
+            <div className="space-y-4 px-4 pb-4">
+              <p className="text-xs leading-relaxed text-cocoa/60">
+                Used only to describe the AI model in your preview. Leave everything empty for a default adult model. Nothing here is about you
+                personally, and no photo of you is ever needed.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {APPEARANCE_OPTIONS.map((opt) => (
+                  <label key={opt.key} className="block text-xs font-medium text-cocoa/70">
+                    {opt.label}
+                    <select
+                      className="input mt-1 capitalize"
+                      value={modelOptions.appearance[opt.key] ?? ''}
+                      onChange={(e) =>
+                        patchModelOptions({ appearance: { ...modelOptions.appearance, [opt.key]: e.target.value || null } })
+                      }
+                    >
+                      <option value="">No preference</option>
+                      {opt.values.map((v) => (
+                        <option key={v} value={v}>
+                          {v}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                ))}
+              </div>
+              <label className="flex cursor-pointer items-start gap-2.5 text-sm focus-within:[&>span]:ring-2 focus-within:[&>span]:ring-rosebrown/50">
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={modelOptions.useReferenceImages}
+                  onChange={(e) => patchModelOptions({ useReferenceImages: e.target.checked })}
+                />
+                <span
+                  className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${
+                    modelOptions.useReferenceImages ? 'border-rosebrown bg-rosebrown text-cream' : 'border-dusty bg-white'
+                  }`}
+                >
+                  {modelOptions.useReferenceImages && <Check size={13} strokeWidth={3} />}
+                </span>
+                <span>
+                  Use my clothing photos as a visual guide
+                  <span className="mt-0.5 block text-xs text-cocoa/50">
+                    Sends up to 4 photos of the garments in the look to the image provider. The result is still an interpretation, not an exact try-on.
+                  </span>
+                </span>
+              </label>
+              {imageStatus && !imageStatus.configured && (
+                <p className="rounded-xl bg-blush/50 p-3 text-xs leading-relaxed text-rosebrown">{imageStatus.message}</p>
+              )}
+            </div>
+          </details>
+
+          {generateError && (
+            <div role="alert" className="flex items-start gap-3 rounded-2xl border border-rosebrown/30 bg-blush/50 px-4 py-3 text-sm text-rosebrown">
+              <TriangleAlert size={18} className="mt-0.5 shrink-0" />
+              <div>
+                <p className="font-medium">We couldn&apos;t create your look.</p>
+                <p className="mt-0.5 text-xs leading-relaxed">{generateError}</p>
+                <p className="mt-1 text-xs text-rosebrown/80">Your choices are kept. Press Get My Look to try again.</p>
+              </div>
+            </div>
+          )}
 
           <button type="submit" disabled={generating} className="btn-primary w-full py-3.5 text-base">
             {generating ? (

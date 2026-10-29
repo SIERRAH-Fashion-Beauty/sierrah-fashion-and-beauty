@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 import { Bookmark, BookmarkCheck, Heart, Lightbulb, ShoppingBag } from 'lucide-react';
 import { FlowSteps } from '../components/layout/FlowSteps';
 import { SLOT_META, SourceBadge, bySlot, itemDetail } from '../components/look/LookParts';
+import { ModelImage } from '../components/look/ModelImage';
 import { SmartImage } from '../components/ui/SmartImage';
 import { useApp } from '../context/AppContext';
-import { suggestedTotal } from '../lib/stylist';
 import { formatInr } from '../data/shopCatalog';
 import type { Look, LookSlot } from '../types';
 
@@ -31,7 +31,7 @@ export function PreviewPage() {
   const { displayLook: look, saveLook, isSaved, toggleFavorite, showToast } = useApp();
   const saved = isSaved(look.id);
   const favorite = !!saved?.favorite;
-  const total = suggestedTotal(look);
+  const total = look.suggestedTotal;
 
   const onSave = () => {
     saveLook(look);
@@ -59,9 +59,9 @@ export function PreviewPage() {
       <div className="grid items-start gap-5 md:grid-cols-[1fr_minmax(260px,340px)_1fr] lg:gap-8">
         {/* Model: first on mobile, centred on desktop */}
         <div className="order-first md:sticky md:top-24 md:order-none md:col-start-2 md:row-start-1">
-          <figure className="mx-auto max-w-sm overflow-hidden rounded-3xl border border-blush bg-white shadow-lift md:max-w-none">
-            <SmartImage src={look.modelImage} alt={`Model wearing the ${look.title}`} className="aspect-[3/4]" position="50% 20%" eager />
-          </figure>
+          <div className="mx-auto max-w-sm md:max-w-none">
+            <ModelImage look={look} variant="preview" />
+          </div>
           <p className="mt-3 text-center font-serif text-xl text-cocoa">{look.title}</p>
           <div className="mt-4 flex items-center justify-center gap-3">
             {saved ? (
@@ -105,7 +105,7 @@ export function PreviewPage() {
           <Lightbulb size={22} className="text-rosegold" strokeWidth={1.5} /> Styling Tips
         </h2>
         <ul className="mt-4 grid gap-3 md:grid-cols-2">
-          {look.tips.map((tip, i) => (
+          {look.stylingTips.map((tip, i) => (
             <li key={i} className="flex gap-3 text-sm leading-relaxed text-cocoa/80">
               <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blush text-xs font-semibold text-rosebrown">
                 {i + 1}
@@ -120,6 +120,8 @@ export function PreviewPage() {
               <>
                 Optional purchases for this look: <strong className="text-rosebrown">{formatInr(total)}</strong> (demo prices)
               </>
+            ) : look.missingItems.length > 0 ? (
+              <>This look is missing {look.missingItems.length} {look.missingItems.length === 1 ? 'piece' : 'pieces'}. See smart shopping ideas.</>
             ) : (
               <>Every piece in this look is already yours. Nothing to buy.</>
             )}

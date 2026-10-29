@@ -5,6 +5,8 @@ import { EmptyState, Skeleton } from '../components/ui/Feedback';
 import { ConfirmDialog } from '../components/ui/Modal';
 import { SmartImage } from '../components/ui/SmartImage';
 import { useApp } from '../context/AppContext';
+import { samplePhotoFor } from '../lib/looks';
+import { resolveImageUrl } from '../services/api';
 import type { SavedLook } from '../types';
 
 export function SavedLooksPage() {
@@ -72,11 +74,22 @@ export function SavedLooksPage() {
               {visible.map((look) => (
                 <article key={look.id} className="card group relative animate-fade-up overflow-hidden transition hover:-translate-y-1 hover:shadow-soft">
                   <button type="button" onClick={() => open(look)} className="block w-full text-left" aria-label={`Open ${look.title}`}>
-                    <SmartImage src={look.modelImage} alt={look.title} className="aspect-[3/4]" position="50% 20%" imgClassName="transition duration-700 group-hover:scale-105" />
+                    <div className="relative">
+                      <SmartImage
+                        src={look.image ? resolveImageUrl(look.image.url) : samplePhotoFor(look)}
+                        alt={look.title}
+                        className="aspect-[3/4]"
+                        position="50% 20%"
+                        imgClassName="transition duration-700 group-hover:scale-105"
+                      />
+                      <span className="absolute bottom-2 left-2 rounded-full bg-white/90 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-rosebrown shadow-card">
+                        {look.image ? 'AI-generated' : 'Sample photo'}
+                      </span>
+                    </div>
                     <div className="py-3 pl-3.5 pr-10">
                       <p className="truncate font-sans text-sm font-medium text-cocoa">{look.title}</p>
                       <p className="mt-0.5 text-[11px] text-cocoa/50">
-                        {look.occasionLabel} · Saved {new Date(look.savedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                        {look.occasionLabel} · {Math.round(look.score)}/100 · Saved {new Date(look.savedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                       </p>
                     </div>
                   </button>

@@ -19,7 +19,7 @@ export const bySlot = (look: Look, slot: LookSlot): LookItem | undefined => look
 
 const SOURCE_STYLES: Record<LookItem['source'], { label: string; cls: string }> = {
   wardrobe: { label: 'From your wardrobe', cls: 'bg-[#EDF3EA] text-[#4B6B45]' },
-  suggested: { label: 'Suggested purchase', cls: 'bg-[#FBE9D9] text-[#9A5B2E]' },
+  shopping: { label: 'Suggested purchase', cls: 'bg-[#FBE9D9] text-[#9A5B2E]' },
   tip: { label: 'Styling tip', cls: 'bg-blush/70 text-rosebrown' },
 };
 
@@ -27,14 +27,24 @@ export function SourceBadge({ source, short = false }: { source: LookItem['sourc
   const s = SOURCE_STYLES[source];
   return (
     <span className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium ${s.cls}`}>
-      {short && source === 'wardrobe' ? 'Yours' : short && source === 'suggested' ? 'Suggested' : s.label}
+      {short && source === 'wardrobe' ? 'Yours' : short && source === 'shopping' ? 'Suggested' : s.label}
     </span>
   );
 }
 
-/** Subtitle without the "From your wardrobe" boilerplate, since the badge already says it. */
-export const itemDetail = (item: LookItem): string =>
-  item.subtitle === 'From your wardrobe' ? '' : item.subtitle.replace(/^Suggested · /, '');
+/** Detail line for an item. The badge already says whether it is owned or suggested. */
+export const itemDetail = (item: LookItem): string => item.detail.replace(/^Suggested purchase: /, 'Suggested: ');
+
+/** Score pill, e.g. "Great match · 82". */
+export function ScoreBadge({ look }: { look: Pick<Look, 'score' | 'scoreLabel'> }) {
+  const tone =
+    look.score >= 72 ? 'bg-[#EDF3EA] text-[#4B6B45]' : look.score >= 58 ? 'bg-[#FBF3DC] text-[#8A6A1E]' : 'bg-[#FBE9D9] text-[#9A5B2E]';
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${tone}`} title="Match score out of 100">
+      {look.scoreLabel} · {Math.round(look.score)}/100
+    </span>
+  );
+}
 
 export function LookChips({ look }: { look: Look }) {
   const p = look.preferences;
