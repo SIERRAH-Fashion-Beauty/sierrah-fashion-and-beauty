@@ -28,3 +28,10 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Generated at runtime
+backend/data/media/
+backend/data/*.db-shm
+backend/data/*.db-wal
+backend/.pytest_cache/
+.pytest_cache/
