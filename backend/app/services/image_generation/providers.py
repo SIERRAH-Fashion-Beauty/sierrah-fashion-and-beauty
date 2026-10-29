@@ -9,7 +9,8 @@ https://platform.openai.com/docs/guides/image-generation :
 * with reference photos: ``POST /v1/images/edits`` (multipart) with one or more
   ``image[]`` files plus the same parameters.
 
-``GeminiImageProvider`` (Google Gemini / "Nano Banana") is defined further down.
+``GeminiImageProvider`` (Google Gemini / "Nano Banana") and the keyless
+``PollinationsImageProvider`` are defined further down.
 
 Add another provider by implementing :class:`ImageProvider` and registering it in
 :data:`PROVIDERS`.
@@ -19,10 +20,14 @@ from __future__ import annotations
 
 import base64
 import binascii
+import logging
+import random
+import ssl
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Protocol
+from urllib.parse import quote
 
 import httpx
 
@@ -38,6 +43,25 @@ from .errors import (
     ProviderUnavailable,
 )
 from .references import ReferenceImage, sniff_mime
+
+
+log = logging.getLogger("sierrah.image")
+
+
+def tls_verify(settings: Settings):
+    """TLS verification setting for httpx: the OS trust store when available, else the bundled CAs.
+
+    Certificates are always verified. Using the OS store lets the backend work behind
+    corporate TLS-inspection proxies whose root certificate is installed on the machine.
+    """
+    if settings.image_use_system_ca:
+        try:
+            import truststore
+
+            return truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        except Exception:  # pragma: no cover - package missing or unsupported platform
+            log.info("truststore unavailable; using the bundled CA certificates")
+    return True
 
 
 @dataclass(frozen=True)
@@ -60,6 +84,9 @@ class _HttpProvider:
 
     name = ""
     supports_references = True
+    requires_key = True
+    retry_rate_limits = True
+    short_prompt = False  # True for small models that need a compact prompt
     DEFAULT_MODEL = ""
     DEFAULT_BASE_URL = ""
 
@@ -83,6 +110,8 @@ class _HttpProvider:
             try:
                 return self._request_once(prompt, references)
             except (ProviderRateLimited, ProviderUnavailable, ProviderTimeout) as err:
+                if isinstance(err, ProviderRateLimited) and not self.retry_rate_limits:
+                    raise
                 last = err
                 if attempt + 1 < attempts:
                     self._sleep(min(2.0 * (attempt + 1), 8.0))
@@ -113,7 +142,7 @@ class OpenAIImageProvider(_HttpProvider):
         headers = {"Authorization": f"Bearer {s.image_api_key}"}
         timeout = httpx.Timeout(s.image_timeout_seconds, connect=10.0)
         try:
-            with httpx.Client(timeout=timeout, transport=self._transport) as client:
+            with httpx.Client(timeout=timeout, verify=tls_verify(s), transport=self._transport) as client:
                 if references:
                     files = [("image[]", (r.filename, r.data, r.mime)) for r in references]
                     response = client.post(f"{self.base_url}/images/edits", headers=headers, data=fields, files=files)
@@ -222,7 +251,7 @@ class GeminiImageProvider(_HttpProvider):
         headers = {"x-goog-api-key": s.image_api_key, "Content-Type": "application/json"}
         timeout = httpx.Timeout(s.image_timeout_seconds, connect=10.0)
         try:
-            with httpx.Client(timeout=timeout, transport=self._transport) as client:
+            with httpx.Client(timeout=timeout, verify=tls_verify(s), transport=self._transport) as client:
                 response = client.post(f"{self.base_url}/interactions", headers=headers, json=payload)
         except httpx.TimeoutException as err:
             raise ProviderTimeout("The image provider took too long to respond. Please try again.") from err
@@ -285,6 +314,8 @@ class GeminiImageProvider(_HttpProvider):
         except (ValueError, AttributeError):
             pass
         low = message.lower()
+        # Google's own explanation never contains the key; keep it in the server log to ease debugging.
+        log.warning("gemini error %s %s: %s", status, google_status, message[:400])
 
         if status in (401, 403) or "api key not valid" in low or "api_key_invalid" in low:
             return ProviderAuthError(
@@ -296,7 +327,11 @@ class GeminiImageProvider(_HttpProvider):
                 return ProviderQuotaError(
                     "The Gemini quota for this key is used up. Check the plan, billing and limits for your API key."
                 )
-            return ProviderRateLimited("The image provider is busy right now. Please retry in a moment.")
+            return ProviderRateLimited(
+                "Gemini says this key has hit its rate or quota limit. Wait a minute and try again. If it keeps "
+                "happening, the key's plan may have no image quota (free-tier keys often don't): check your "
+                "usage and billing in Google AI Studio."
+            )
         if status == 404:
             return ProviderRejected(
                 f"The image model \"{self.model}\" was not found for this key. Check IMAGE_MODEL.",
@@ -317,12 +352,76 @@ class GeminiImageProvider(_HttpProvider):
         return ImageError(f"Unexpected response from the image provider ({status}).")
 
 
+class PollinationsImageProvider(_HttpProvider):
+    """Free, keyless text-to-image through Pollinations' classic API.
+
+    Documented at https://github.com/pollinations/pollinations/blob/master/APIDOCS.md :
+    ``GET https://image.pollinations.ai/prompt/{prompt}?width&height&seed`` returns a JPEG.
+    Free requests are anonymous and limited per IP (one at a time, at least ~45 s apart);
+    beyond that the service answers ``402`` with a ``Retry-After`` header. Images carry a small
+    Pollinations logo, the service is best-effort and it cannot take reference photos.
+    The quality is below the paid providers, and the model is chosen by the service.
+    """
+
+    name = "pollinations"
+    requires_key = False
+    supports_references = False
+    short_prompt = True  # long prompts make this small model ignore the outfit entirely (verified live)
+    retry_rate_limits = False  # the free tier needs ~45 s between images; retrying at once only fails again
+    DEFAULT_MODEL = "pollinations-default"
+    DEFAULT_BASE_URL = "https://image.pollinations.ai"
+    WIDTH, HEIGHT = 512, 768  # 2:3 portrait, inside the documented 768x768 area cap
+
+    def _request_once(self, prompt: str, references: list[ReferenceImage]) -> ProviderImage:
+        s = self.settings
+        # The service answers 404 when the path contains a newline, so send the prompt as one line.
+        flat = " ".join(prompt.split())
+        url = f"{self.base_url}/prompt/{quote(flat, safe='')}"
+        # No ``safe`` flag: with ``safe=true`` this model drifted to unrelated 'safety' imagery (verified live).
+        params = {"width": self.WIDTH, "height": self.HEIGHT, "seed": random.randint(1, 2_000_000_000)}
+        timeout = httpx.Timeout(s.image_timeout_seconds, connect=10.0)
+        try:
+            with httpx.Client(timeout=timeout, verify=tls_verify(s), transport=self._transport, follow_redirects=True) as client:
+                response = client.get(url, params=params)
+        except httpx.TimeoutException as err:
+            raise ProviderTimeout("The image provider took too long to respond. Please try again.") from err
+        except httpx.HTTPError as err:
+            raise ProviderUnavailable("Could not reach the image provider. Check the connection and try again.") from err
+        return self._parse(response)
+
+    def _parse(self, response: httpx.Response) -> ProviderImage:
+        status = response.status_code
+        if status == 200:
+            data = response.content
+            mime = sniff_mime(data)
+            if mime is None:
+                raise InvalidProviderResponse("The image provider returned data that is not a valid image.")
+            return ProviderImage(data=data, mime=mime, model=self.model)
+
+        log.warning("pollinations error %s: %s", status, response.text[:300].replace("\n", " "))
+        if status in (402, 429):
+            wait = response.headers.get("retry-after", "")
+            hint = f" Try again in about {wait} seconds." if wait.isdigit() else " Try again in about a minute."
+            raise ProviderRateLimited(
+                "The free image service allows one image at a time, roughly every 45 seconds." + hint
+            )
+        if status in (400, 403, 422):
+            raise ProviderRejected(
+                "The free image service declined this request. Try again or try a different look.",
+                code="moderation_blocked" if status == 403 else "invalid_request",
+            )
+        if status >= 500:
+            raise ProviderUnavailable("The free image service is having problems. Please try again shortly.")
+        raise ImageError(f"Unexpected response from the image provider ({status}).")
+
+
 PROVIDERS: dict[str, type[_HttpProvider]] = {
     "gemini": GeminiImageProvider,
     "google": GeminiImageProvider,  # alias
     "openai": OpenAIImageProvider,
+    "pollinations": PollinationsImageProvider,
 }
 
 
 def supported_providers() -> list[str]:
-    return ["gemini", "openai"]
+    return ["gemini", "openai", "pollinations"]

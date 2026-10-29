@@ -8,7 +8,7 @@ from ...config import Settings
 from ...repositories import ImageRepository, OutfitRepository, SavedLookRepository, WardrobeRepository
 from ...schemas import GenerateImageRequest, GenerateImageResponse, ImageStatus
 from .errors import LocalRateLimited, OutfitNotFound
-from .prompt import build_prompt
+from .prompt import build_prompt, build_short_prompt
 from .providers import PROVIDERS, ImageProvider, supported_providers
 from .references import collect_references
 from .storage import MediaStore
@@ -19,7 +19,8 @@ DISCLAIMER = (
 )
 SETUP_MESSAGE = (
     "AI model previews are not set up yet. Add IMAGE_PROVIDER=gemini (or openai) and IMAGE_API_KEY to "
-    "backend/.env and restart the API (see README, \"AI model images\")."
+    "backend/.env, or use the free keyless IMAGE_PROVIDER=pollinations, then restart the API "
+    "(see README, \"AI model images\")."
 )
 
 
@@ -76,7 +77,7 @@ class ImageGenerationService:
         if self._provider is not None:
             return self._provider
         cls = PROVIDERS.get(self.settings.image_provider)
-        if cls is None or not self.settings.image_api_key:
+        if cls is None or (cls.requires_key and not self.settings.image_api_key):
             return None
         self._provider = cls(self.settings)
         return self._provider
@@ -123,7 +124,10 @@ class ImageGenerationService:
             references = []
             if request.use_reference_images and provider.supports_references:
                 references = collect_references(outfit, self.wardrobe, self.settings)
-            prompt = build_prompt(outfit, request.appearance, with_references=bool(references))
+            if getattr(provider, "short_prompt", False):
+                prompt = build_short_prompt(outfit, request.appearance)
+            else:
+                prompt = build_prompt(outfit, request.appearance, with_references=bool(references))
 
             self._limiter.check()
             result = provider.generate(prompt, references)
@@ -142,7 +146,9 @@ class ImageGenerationService:
             self.outfits.attach_image(outfit_id, image)
             self.saved.attach_image(outfit_id, image)
             message = ""
-            if request.use_reference_images and not references:
+            if request.use_reference_images and not provider.supports_references:
+                message = "This image provider cannot use reference photos, so the image was generated from the outfit description only."
+            elif request.use_reference_images and not references:
                 message = "No usable clothing photos were found, so the image was generated from the outfit description only."
             return self._ready(outfit_id, image, cached=False, message=message)
 

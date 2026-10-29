@@ -94,6 +94,8 @@ class Settings:
     image_resolution: str = field(default_factory=lambda: os.getenv("IMAGE_RESOLUTION", "1K").strip())
     image_timeout_seconds: float = field(default_factory=lambda: _float("IMAGE_TIMEOUT_SECONDS", 150))
     image_max_retries: int = field(default_factory=lambda: _int("IMAGE_MAX_RETRIES", 1))
+    # Verify provider TLS against the operating system's trust store (needed behind corporate proxies such as Zscaler).
+    image_use_system_ca: bool = field(default_factory=lambda: _bool(os.getenv("IMAGE_USE_SYSTEM_CA"), True))
     image_max_per_hour: int = field(default_factory=lambda: _int("IMAGE_MAX_PER_HOUR", 30))
     image_max_reference_images: int = field(default_factory=lambda: _int("IMAGE_MAX_REFERENCE_IMAGES", 4))
     image_max_reference_bytes: int = field(

@@ -96,6 +96,43 @@ def pick_background(outfit: Outfit) -> str:
     return options[zlib.crc32(outfit.id.encode()) % len(options)]
 
 
+def _short_piece(piece: OutfitPiece) -> str:
+    name = clean(piece.name, 40)
+    color = clean(piece.colors[0], 20) if piece.colors else ""
+    if color and color.lower() not in name.lower():
+        return f"{color.lower()} {name}"
+    return name
+
+
+def build_short_prompt(outfit: Outfit, appearance: Appearance | None = None) -> str:
+    """A compact (~300 character) prompt for small free models that lose the plot on long prompts.
+
+    Same rules as :func:`build_prompt`: only structured outfit data and the enumerated appearance
+    choices are used, never free-text notes.
+    """
+    appearance = appearance or outfit.appearance
+    by_slot = {item.slot: item for item in outfit.items}
+
+    def pieces(slot: str) -> str:
+        item = by_slot.get(slot)
+        if not item:
+            return ""
+        return " with ".join(_short_piece(p) for p in item.pieces) if item.pieces else clean(item.title, 40)
+
+    worn = [pieces("outfit")]
+    for slot, label in (("footwear", ""), ("bag", "carrying a "), ("jewellery", "")):
+        text = pieces(slot)
+        if text:
+            worn.append(f"{label}{text}")
+    parts = [
+        f"Full-length fashion editorial photo of {appearance_text(appearance)}, wearing {', '.join(w for w in worn if w)}",
+    ]
+    if "hairstyle" in by_slot:
+        parts.append(clean(by_slot["hairstyle"].title, 50).lower() + " hairstyle")
+    parts.append(f"{pick_background(outfit)}, soft studio lighting, standing, head to toe")
+    return ", ".join(parts)
+
+
 def build_prompt(outfit: Outfit, appearance: Appearance | None = None, *, with_references: bool = False) -> str:
     """Create the text prompt for an outfit. ``appearance`` overrides the outfit's own."""
     appearance = appearance or outfit.appearance
