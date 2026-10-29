@@ -1,0 +1,135 @@
+@import '@fontsource/cormorant-garamond/400.css';
+@import '@fontsource/cormorant-garamond/500.css';
+@import '@fontsource/cormorant-garamond/600.css';
+@import '@fontsource/cormorant-garamond/400-italic.css';
+@import '@fontsource-variable/inter';
+@import '@fontsource/great-vibes/400.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream font-sans text-cocoa antialiased;
+    background-image:
+      radial-gradient(900px 500px at 100% 0%, rgba(246, 220, 216, 0.55), transparent 60%),
+      radial-gradient(700px 400px at 0% 100%, rgba(246, 220, 216, 0.4), transparent 60%);
+    background-attachment: fixed;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-serif;
+  }
+  ::selection {
+    @apply bg-blush text-cocoa;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-rosebrown/60 ring-offset-2 ring-offset-cream;
+  }
+  img {
+    @apply select-none;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium
+      transition duration-200 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-rosebrown text-cream shadow-soft hover:bg-[#955858] active:scale-[0.98];
+  }
+  .btn-soft {
+    @apply btn bg-blush/80 text-rosebrown hover:bg-blush;
+  }
+  .btn-outline {
+    @apply btn border border-dusty bg-white/60 text-rosebrown hover:bg-blush/50;
+  }
+  .btn-ghost {
+    @apply btn px-3 text-rosebrown hover:bg-blush/50;
+  }
+  .card {
+    @apply rounded-2xl border border-blush/70 bg-white/75 shadow-card backdrop-blur-sm;
+  }
+  .input {
+    @apply w-full rounded-xl border border-dusty/60 bg-white/80 px-4 py-2.5 text-sm text-cocoa
+      placeholder:text-cocoa/40 transition focus:border-rosebrown focus:outline-none focus:ring-2 focus:ring-rosebrown/20;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-[0.14em] text-rosebrown;
+  }
+  .section-title {
+    @apply font-serif text-3xl font-medium text-cocoa sm:text-4xl;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-dusty/60 bg-white/70 px-4 py-2 text-sm
+      text-cocoa transition hover:border-rosebrown hover:bg-blush/40;
+  }
+  .pill-active {
+    @apply border-rosebrown bg-rosebrown text-cream shadow-soft hover:bg-rosebrown hover:text-cream;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .hero-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 38%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 38%);
+  }
+  .hero-fade-y {
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  }
+  /* Hero portrait: fades into the page at the bottom on mobile, and at the left on desktop. */
+  .hero-mask {
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+  }
+  @media (min-width: 1024px) {
+    .hero-mask {
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 38%);
+      mask-image: linear-gradient(to right, transparent 0%, #000 38%);
+    }
+  }
+  .pb-safe {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, #f6dcd8 0%, #fbede8 50%, #f6dcd8 100%);
+  background-size: 200% 100%;
+  animation: shimmer-move 1.4s linear infinite;
+}
+@keyframes shimmer-move {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
