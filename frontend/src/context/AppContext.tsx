@@ -10,11 +10,30 @@ import {
 } from 'react';
 import { DEMO_WARDROBE } from '../data/demoWardrobe';
 import { uid } from '../lib/id';
-import { DEFAULT_PREFERENCES, buildDemoLook, buildSeedSavedLooks, generateLook } from '../lib/stylist';
+import {
+  DEFAULT_PREFERENCES,
+  DEMO_LOOK,
+  SAMPLE_LOOKS,
+  dehydrateImages,
+  hydrateImages,
+  isModernLook,
+  normalizeWardrobe,
+  requestWardrobe,
+} from '../lib/looks';
 import { STORAGE_KEYS, clearAll, loadJSON, saveJSON } from '../lib/storage';
-import { api } from '../services/api';
-import { resolveLookImage } from '../services/lookImage';
-import type { ApiStatus, Look, LookPreferences, SavedLook, WardrobeItem } from '../types';
+import { ApiError, api } from '../services/api';
+import type {
+  ApiStatus,
+  Appearance,
+  GeneratedImage,
+  ImageJob,
+  ImageStatus,
+  Look,
+  LookPreferences,
+  LookSession,
+  SavedLook,
+  WardrobeItem,
+} from '../types';
 
 interface Toast {
   id: number;
@@ -22,15 +41,27 @@ interface Toast {
   tone: 'success' | 'error' | 'info';
 }
 
+export interface ModelOptions {
+  appearance: Appearance;
+  /** Opt in to sending photos of the owned garments as a loose visual guide. */
+  useReferenceImages: boolean;
+}
+
+const DEFAULT_MODEL_OPTIONS: ModelOptions = { appearance: {}, useReferenceImages: false };
+
 interface State {
   wardrobe: WardrobeItem[];
   saved: SavedLook[];
   preferences: LookPreferences;
-  currentLook: Look | null;
+  modelOptions: ModelOptions;
+  session: LookSession | null;
   apiStatus: ApiStatus;
+  imageStatus: ImageStatus | null;
+  imageJobs: Record<string, ImageJob>;
   booting: boolean;
   syncing: boolean;
   generating: boolean;
+  generateError: string | null;
   toast: Toast | null;
   itemModal: { open: boolean; editing: WardrobeItem | null; initialImage?: string };
 }
@@ -39,11 +70,16 @@ type Action =
   | { type: 'wardrobe/set'; items: WardrobeItem[] }
   | { type: 'saved/set'; looks: SavedLook[] }
   | { type: 'prefs/patch'; patch: Partial<LookPreferences> }
-  | { type: 'look/set'; look: Look | null }
+  | { type: 'model/patch'; patch: Partial<ModelOptions> }
+  | { type: 'session/set'; session: LookSession | null }
+  | { type: 'session/active'; id: string }
   | { type: 'api/status'; status: ApiStatus }
+  | { type: 'image/status'; status: ImageStatus | null }
+  | { type: 'image/job'; id: string; job: ImageJob | null }
+  | { type: 'look/image'; id: string; image: GeneratedImage }
   | { type: 'boot/done' }
   | { type: 'sync'; value: boolean }
-  | { type: 'generating'; value: boolean }
+  | { type: 'generating'; value: boolean; error?: string | null }
   | { type: 'toast'; toast: Toast | null }
   | { type: 'modal'; open: boolean; editing?: WardrobeItem | null; initialImage?: string }
   | { type: 'reset'; wardrobe: WardrobeItem[] };
@@ -56,16 +92,36 @@ function reducer(state: State, action: Action): State {
       return { ...state, saved: action.looks };
     case 'prefs/patch':
       return { ...state, preferences: { ...state.preferences, ...action.patch } };
-    case 'look/set':
-      return { ...state, currentLook: action.look };
+    case 'model/patch':
+      return { ...state, modelOptions: { ...state.modelOptions, ...action.patch } };
+    case 'session/set':
+      return { ...state, session: action.session };
+    case 'session/active':
+      return state.session ? { ...state, session: { ...state.session, activeId: action.id } } : state;
     case 'api/status':
       return { ...state, apiStatus: action.status };
+    case 'image/status':
+      return { ...state, imageStatus: action.status };
+    case 'image/job': {
+      const jobs = { ...state.imageJobs };
+      if (action.job) jobs[action.id] = action.job;
+      else delete jobs[action.id];
+      return { ...state, imageJobs: jobs };
+    }
+    case 'look/image': {
+      const patch = <T extends Look>(l: T): T => (l.id === action.id ? { ...l, image: action.image } : l);
+      return {
+        ...state,
+        session: state.session ? { ...state.session, looks: state.session.looks.map(patch) } : null,
+        saved: state.saved.map(patch),
+      };
+    }
     case 'boot/done':
       return { ...state, booting: false };
     case 'sync':
       return { ...state, syncing: action.value };
     case 'generating':
-      return { ...state, generating: action.value };
+      return { ...state, generating: action.value, generateError: action.error ?? null };
     case 'toast':
       return { ...state, toast: action.toast };
     case 'modal':
@@ -77,9 +133,11 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         wardrobe: action.wardrobe,
-        saved: buildSeedSavedLooks(action.wardrobe),
+        saved: SAMPLE_LOOKS,
         preferences: DEFAULT_PREFERENCES,
-        currentLook: null,
+        modelOptions: DEFAULT_MODEL_OPTIONS,
+        session: null,
+        imageJobs: {},
       };
     default:
       return state;
@@ -87,18 +145,37 @@ function reducer(state: State, action: Action): State {
 }
 
 function initState(): State {
-  const stored = loadJSON<WardrobeItem[] | null>(STORAGE_KEYS.wardrobe, null);
+  const storedWardrobe = normalizeWardrobe(loadJSON<unknown>(STORAGE_KEYS.wardrobe, null));
+  const wardrobe = storedWardrobe ?? DEMO_WARDROBE;
+
+  // Older builds stored looks in another shape; those cannot be reopened, so they are dropped.
+  // `null` means "never stored", so first launch gets sample looks while a user who deleted
+  // everything keeps an empty list.
+  const storedSaved = loadJSON<unknown[] | null>(STORAGE_KEYS.saved, null);
+  const modernSaved = storedSaved?.filter(isModernLook).map((l) => hydrateImages(l as SavedLook, wardrobe)) as
+    | SavedLook[]
+    | undefined;
+  const saved = storedSaved === null || (storedSaved.length > 0 && !modernSaved?.length) ? SAMPLE_LOOKS : modernSaved ?? [];
+
+  const storedSession = loadJSON<LookSession | null>(STORAGE_KEYS.session, null);
+  const session =
+    storedSession && Array.isArray(storedSession.looks) && storedSession.looks.length && storedSession.looks.every(isModernLook)
+      ? { ...storedSession, looks: storedSession.looks.map((l) => hydrateImages(l, wardrobe)) }
+      : null;
+
   return {
-    wardrobe: stored ?? DEMO_WARDROBE,
-    // `null` means "never stored", so first launch gets sample looks while a user who
-    // deleted everything keeps an empty list.
-    saved: loadJSON<SavedLook[] | null>(STORAGE_KEYS.saved, null) ?? buildSeedSavedLooks(stored ?? DEMO_WARDROBE),
+    wardrobe,
+    saved,
     preferences: { ...DEFAULT_PREFERENCES, ...loadJSON<Partial<LookPreferences>>(STORAGE_KEYS.preferences, {}) },
-    currentLook: loadJSON<Look | null>(STORAGE_KEYS.currentLook, null),
+    modelOptions: { ...DEFAULT_MODEL_OPTIONS, ...loadJSON<Partial<ModelOptions>>(STORAGE_KEYS.modelOptions, {}) },
+    session,
     apiStatus: 'checking',
+    imageStatus: null,
+    imageJobs: {},
     booting: true,
     syncing: false,
     generating: false,
+    generateError: null,
     toast: null,
     itemModal: { open: false, editing: null },
   };
@@ -107,14 +184,20 @@ function initState(): State {
 export type NewWardrobeItem = Omit<WardrobeItem, 'id' | 'createdAt'> & { id?: string };
 
 interface AppContextValue extends State {
-  /** The look to display: the generated one, or the lavender demo look. */
+  /** The look to display: the active recommendation, or the sample look. */
   displayLook: Look;
+  /** Every outfit option from the latest request (empty before the first recommendation). */
+  options: Look[];
+  limitations: string[];
   addItem: (item: NewWardrobeItem) => WardrobeItem;
   updateItem: (item: WardrobeItem) => void;
   removeItem: (id: string) => void;
   saveWardrobe: () => Promise<void>;
   patchPreferences: (patch: Partial<LookPreferences>) => void;
-  generate: () => Promise<Look>;
+  patchModelOptions: (patch: Partial<ModelOptions>) => void;
+  generate: () => Promise<LookSession>;
+  selectLook: (id: string) => void;
+  generateImage: (lookId: string, opts?: { regenerate?: boolean }) => Promise<void>;
   openLook: (look: Look) => void;
   saveLook: (look: Look, opts?: { favorite?: boolean }) => SavedLook | null;
   isSaved: (lookId: string) => SavedLook | undefined;
@@ -129,6 +212,8 @@ interface AppContextValue extends State {
 
 const AppContext = createContext<AppContextValue | null>(null);
 
+const hasAppearance = (a: Appearance) => Object.values(a).some(Boolean);
+
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, initState);
   const stateRef = useRef(state);
@@ -141,15 +226,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const ok =
       saveJSON(STORAGE_KEYS.wardrobe, state.wardrobe) &&
-      saveJSON(STORAGE_KEYS.saved, state.saved) &&
+      saveJSON(STORAGE_KEYS.saved, state.saved.map(dehydrateImages)) &&
       saveJSON(STORAGE_KEYS.preferences, state.preferences) &&
-      saveJSON(STORAGE_KEYS.currentLook, state.currentLook);
+      saveJSON(STORAGE_KEYS.modelOptions, state.modelOptions) &&
+      saveJSON(
+        STORAGE_KEYS.session,
+        state.session ? { ...state.session, looks: state.session.looks.map(dehydrateImages) } : null,
+      );
     if (!ok && !quotaWarned.current) {
       quotaWarned.current = true;
       showToast('Your browser storage is full. Recent changes may not persist on this device.', 'error');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.wardrobe, state.saved, state.preferences, state.currentLook]);
+  }, [state.wardrobe, state.saved, state.preferences, state.modelOptions, state.session]);
 
   // ---- Toasts ------------------------------------------------------------
   const showToast = useCallback((message: string, tone: Toast['tone'] = 'success') => {
@@ -182,15 +271,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
       fn()
         .then(() => dispatch({ type: 'api/status', status: 'online' }))
-        .catch(markOffline);
+        .catch((err) => {
+          // A validation error (4xx) is not an outage; only an unreachable server is.
+          if (err instanceof ApiError && !err.unreachable && err.status && err.status < 500) {
+            showToast(`The server rejected a change: ${err.message}`, 'error');
+            return;
+          }
+          markOffline();
+        });
     },
-    [markDirty, markOffline],
+    [markDirty, markOffline, showToast],
   );
 
   const boot = useCallback(async () => {
     dispatch({ type: 'api/status', status: 'checking' });
     try {
-      await api.health();
+      const health = await api.health();
+      dispatch({ type: 'image/status', status: health.imageGeneration ?? null });
       const local = stateRef.current;
       if (loadJSON<boolean>(STORAGE_KEYS.dirty, false)) {
         // Local edits are newer than the server's copy: push them up.
@@ -201,8 +298,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         const [remoteWardrobe, remoteSaved] = await Promise.all([api.getWardrobe(), api.getSavedLooks()]);
         if (remoteWardrobe.length) dispatch({ type: 'wardrobe/set', items: remoteWardrobe });
         else if (local.wardrobe.length) await api.replaceWardrobe(local.wardrobe);
-        if (remoteSaved.length) dispatch({ type: 'saved/set', looks: remoteSaved });
-        else if (local.saved.length) await api.replaceSavedLooks(local.saved);
+        if (remoteSaved.length) {
+          const wardrobe = remoteWardrobe.length ? remoteWardrobe : local.wardrobe;
+          dispatch({ type: 'saved/set', looks: remoteSaved.map((l) => hydrateImages(l, wardrobe)) });
+        } else if (local.saved.length) await api.replaceSavedLooks(local.saved);
       }
       offlineNotified.current = false;
       dispatch({ type: 'api/status', status: 'online' });
@@ -255,40 +354,114 @@ export function AppProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'sync', value: true });
     try {
       await api.replaceWardrobe(stateRef.current.wardrobe);
+      markDirty(false);
       dispatch({ type: 'api/status', status: 'online' });
       showToast('Wardrobe saved and synced.');
-    } catch {
-      dispatch({ type: 'api/status', status: 'offline' });
-      showToast('Wardrobe saved on this device. Start the backend to sync it.', 'info');
+    } catch (err) {
+      if (err instanceof ApiError && !err.unreachable) {
+        showToast(`Could not save the wardrobe: ${err.message}`, 'error');
+      } else {
+        markDirty(true);
+        dispatch({ type: 'api/status', status: 'offline' });
+        showToast('Wardrobe saved on this device. Start the backend to sync it.', 'info');
+      }
     } finally {
       dispatch({ type: 'sync', value: false });
     }
-  }, [showToast]);
+  }, [markDirty, showToast]);
 
   // ---- Styling -----------------------------------------------------------
   const patchPreferences = useCallback((patch: Partial<LookPreferences>) => {
     dispatch({ type: 'prefs/patch', patch });
   }, []);
 
+  const patchModelOptions = useCallback((patch: Partial<ModelOptions>) => {
+    dispatch({ type: 'model/patch', patch });
+  }, []);
+
+  const generateImage = useCallback<AppContextValue['generateImage']>(
+    async (lookId, opts) => {
+      const { modelOptions } = stateRef.current;
+      dispatch({ type: 'image/job', id: lookId, job: { status: 'loading' } });
+      try {
+        const res = await api.generateImage(lookId, {
+          regenerate: opts?.regenerate ?? false,
+          appearance: hasAppearance(modelOptions.appearance) ? modelOptions.appearance : null,
+          useReferenceImages: modelOptions.useReferenceImages,
+        });
+        if (res.status === 'not_configured' || !res.image) {
+          dispatch({ type: 'image/status', status: { configured: false, provider: 'none', message: res.message } });
+          dispatch({ type: 'image/job', id: lookId, job: { status: 'not_configured', message: res.message } });
+          return;
+        }
+        dispatch({ type: 'look/image', id: lookId, image: res.image });
+        dispatch({ type: 'image/job', id: lookId, job: null });
+        dispatch({ type: 'api/status', status: 'online' });
+      } catch (err) {
+        const e = err instanceof ApiError ? err : new ApiError('Something went wrong while creating the preview.');
+        if (e.unreachable) dispatch({ type: 'api/status', status: 'offline' });
+        dispatch({
+          type: 'image/job',
+          id: lookId,
+          job: { status: 'error', message: e.message, retryable: e.retryable || e.status === 404 || e.unreachable },
+        });
+      }
+    },
+    [],
+  );
+
   const generate = useCallback(async () => {
     dispatch({ type: 'generating', value: true });
     try {
-      const { preferences, wardrobe, apiStatus } = stateRef.current;
-      const look = generateLook(preferences, wardrobe);
-      const [modelImage] = await Promise.all([
-        apiStatus === 'offline' ? Promise.resolve(look.modelImage) : resolveLookImage(look),
-        new Promise((r) => setTimeout(r, 900)),
-      ]);
-      const finished = { ...look, modelImage };
-      dispatch({ type: 'look/set', look: finished });
-      return finished;
-    } finally {
+      const { preferences, wardrobe, modelOptions } = stateRef.current;
+      const res = await api.recommend({
+        ...preferences,
+        customOccasion: preferences.customOccasion?.trim() || null,
+        comfort: preferences.traits.includes('comfortable') ? 'high' : preferences.comfort,
+        wardrobe: requestWardrobe(wardrobe),
+        maxOutfits: 3,
+        appearance: hasAppearance(modelOptions.appearance) ? modelOptions.appearance : null,
+      });
+      const looks = res.outfits.map((o) => hydrateImages(o, wardrobe));
+      const session: LookSession = {
+        requestId: res.requestId,
+        looks,
+        activeId: looks[0].id,
+        limitations: res.limitations,
+        wardrobeSize: res.wardrobeSize,
+        engineVersion: res.engineVersion,
+      };
+      dispatch({ type: 'session/set', session });
+      dispatch({ type: 'api/status', status: 'online' });
       dispatch({ type: 'generating', value: false });
+      // Only the top option is created automatically (and only when a provider is set up),
+      // so a single click never spends money on several images.
+      if (stateRef.current.imageStatus?.configured) void generateImage(looks[0].id);
+      return session;
+    } catch (err) {
+      const e = err instanceof ApiError ? err : new ApiError('We could not create your look. Please try again.');
+      if (e.unreachable) dispatch({ type: 'api/status', status: 'offline' });
+      dispatch({ type: 'generating', value: false, error: e.message });
+      throw e;
     }
-  }, []);
+  }, [generateImage]);
+
+  const selectLook = useCallback((id: string) => dispatch({ type: 'session/active', id }), []);
 
   const openLook = useCallback((look: Look) => {
-    dispatch({ type: 'look/set', look });
+    // Reopening a saved look shows exactly what was saved: no request is made.
+    const hydrated = hydrateImages(look, stateRef.current.wardrobe);
+    dispatch({
+      type: 'session/set',
+      session: {
+        requestId: look.requestId,
+        looks: [hydrated],
+        activeId: look.id,
+        limitations: [],
+        wardrobeSize: stateRef.current.wardrobe.length,
+        engineVersion: '',
+      },
+    });
     dispatch({ type: 'prefs/patch', patch: look.preferences });
   }, []);
 
@@ -312,7 +485,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
         savedAt: new Date().toISOString(),
       };
       dispatch({ type: 'saved/set', looks: [saved, ...stateRef.current.saved] });
-      if (look.isDemo) dispatch({ type: 'look/set', look: { ...look, id: saved.id, isDemo: false } });
+      if (look.isDemo) {
+        const session = stateRef.current.session;
+        const copy = { ...look, id: saved.id, isDemo: false };
+        dispatch({
+          type: 'session/set',
+          session: {
+            requestId: look.requestId,
+            looks: [copy],
+            activeId: copy.id,
+            limitations: session?.limitations ?? [],
+            wardrobeSize: stateRef.current.wardrobe.length,
+            engineVersion: session?.engineVersion ?? '',
+          },
+        });
+      }
       background(() => api.createSavedLook(saved));
       return saved;
     },
@@ -349,32 +536,36 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const resetDemo = useCallback(() => {
     clearAll();
-    const previous = stateRef.current.saved;
     dispatch({ type: 'reset', wardrobe: DEMO_WARDROBE });
-    const seeds = buildSeedSavedLooks(DEMO_WARDROBE);
     background(async () => {
       await api.replaceWardrobe(DEMO_WARDROBE);
-      for (const s of previous) await api.deleteSavedLook(s.id);
-      for (const s of seeds) await api.createSavedLook(s);
+      await api.replaceSavedLooks(SAMPLE_LOOKS);
     });
     showToast('Demo data restored.');
   }, [background, showToast]);
 
-  const displayLook = useMemo(
-    () => state.currentLook ?? buildDemoLook(state.wardrobe.length ? state.wardrobe : DEMO_WARDROBE),
-    [state.currentLook, state.wardrobe],
-  );
+  const options = useMemo(() => state.session?.looks ?? [], [state.session]);
+  const displayLook = useMemo(() => {
+    const active = state.session?.looks.find((l) => l.id === state.session?.activeId);
+    return active ?? state.session?.looks[0] ?? DEMO_LOOK;
+  }, [state.session]);
+  const limitations = state.session?.limitations ?? [];
 
   const value = useMemo<AppContextValue>(
     () => ({
       ...state,
       displayLook,
+      options,
+      limitations,
       addItem,
       updateItem,
       removeItem,
       saveWardrobe,
       patchPreferences,
+      patchModelOptions,
       generate,
+      selectLook,
+      generateImage,
       openLook,
       saveLook,
       isSaved,
@@ -389,12 +580,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [
       state,
       displayLook,
+      options,
+      limitations,
       addItem,
       updateItem,
       removeItem,
       saveWardrobe,
       patchPreferences,
+      patchModelOptions,
       generate,
+      selectLook,
+      generateImage,
       openLook,
       saveLook,
       isSaved,
