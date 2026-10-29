@@ -1,71 +1,77 @@
 from __future__ import annotations
 
-import sqlite3
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
-from fastapi import APIRouter, HTTPException, Response, status
-
-from ..database import db
+from ..dependencies import get_image_repo, get_outfit_repo, get_saved_repo, get_wardrobe_repo
+from ..repositories import ImageRepository, OutfitRepository, SavedLookRepository, WardrobeRepository
 from ..schemas import FavoritePatch, SavedLook, SavedLookSync
 
 router = APIRouter(prefix="/api/saved-looks", tags=["saved-looks"])
 
 
-def _row_to_look(row: sqlite3.Row) -> SavedLook:
-    look = SavedLook.model_validate_json(row["payload"])
-    # `favorite` lives in its own column so it can be toggled cheaply.
-    return look.model_copy(update={"favorite": bool(row["favorite"])})
+def _prepare(
+    look: SavedLook, wardrobe: WardrobeRepository, images: ImageRepository
+) -> SavedLook:
+    """Make a saved look self-contained so it reopens exactly as it was recommended.
 
-
-def _upsert(conn: sqlite3.Connection, look: SavedLook) -> None:
-    conn.execute(
-        """INSERT INTO saved_looks (id, payload, favorite, saved_at) VALUES (?, ?, ?, ?)
-           ON CONFLICT(id) DO UPDATE SET payload = excluded.payload,
-               favorite = excluded.favorite, saved_at = excluded.saved_at""",
-        (look.id, look.model_dump_json(by_alias=True), int(look.favorite), look.saved_at),
-    )
+    * Wardrobe piece photos that were left out of the recommendation (uploaded photos)
+      are copied in from the wardrobe.
+    * A generated model image that exists on the server is attached.
+    """
+    for item in look.items:
+        for piece in item.pieces:
+            if not piece.image and piece.source == "wardrobe" and piece.wardrobe_item_id:
+                stored = wardrobe.get(piece.wardrobe_item_id)
+                if stored and stored.image:
+                    piece.image = stored.image
+        if not item.image:
+            item.image = next((p.image for p in item.pieces if p.image), "")
+    if look.image is None:
+        existing = images.get(look.id)
+        if existing:
+            look.image = existing[0]
+    return look
 
 
 @router.get("", response_model=list[SavedLook])
-def list_saved_looks() -> list[SavedLook]:
-    with db() as conn:
-        rows = conn.execute("SELECT * FROM saved_looks ORDER BY saved_at DESC, rowid DESC").fetchall()
-    return [_row_to_look(r) for r in rows]
+def list_saved_looks(repo: SavedLookRepository = Depends(get_saved_repo)) -> list[SavedLook]:
+    return repo.list()
 
 
 @router.post("", response_model=SavedLook, status_code=status.HTTP_201_CREATED)
-def create_saved_look(look: SavedLook) -> SavedLook:
-    """Save a look. Posting an existing id updates it, so retries are safe."""
-    with db() as conn:
-        _upsert(conn, look)
-        row = conn.execute("SELECT * FROM saved_looks WHERE id = ?", (look.id,)).fetchone()
-    return _row_to_look(row)
+def create_saved_look(
+    look: SavedLook,
+    repo: SavedLookRepository = Depends(get_saved_repo),
+    outfits: OutfitRepository = Depends(get_outfit_repo),
+    wardrobe: WardrobeRepository = Depends(get_wardrobe_repo),
+    images: ImageRepository = Depends(get_image_repo),
+) -> SavedLook:
+    """Save a recommended outfit. Saving the same look twice just updates it."""
+    prepared = _prepare(look, wardrobe, images)
+    saved = repo.upsert(prepared)
+    outfits.save_many([prepared])
+    return saved
 
 
 @router.put("/sync", response_model=list[SavedLook])
-def replace_saved_looks(payload: SavedLookSync) -> list[SavedLook]:
-    """Replace every saved look with the client's copy."""
-    with db() as conn:
-        conn.execute("DELETE FROM saved_looks")
-        for look in payload.looks:
-            _upsert(conn, look)
-        rows = conn.execute("SELECT * FROM saved_looks ORDER BY saved_at DESC, rowid DESC").fetchall()
-    return [_row_to_look(r) for r in rows]
+def replace_saved_looks(
+    payload: SavedLookSync, repo: SavedLookRepository = Depends(get_saved_repo)
+) -> list[SavedLook]:
+    return repo.replace_all(payload.looks)
 
 
 @router.patch("/{look_id}", response_model=SavedLook)
-def set_favorite(look_id: str, patch: FavoritePatch) -> SavedLook:
-    with db() as conn:
-        cur = conn.execute(
-            "UPDATE saved_looks SET favorite = ? WHERE id = ?", (int(patch.favorite), look_id)
-        )
-        if cur.rowcount == 0:
-            raise HTTPException(status_code=404, detail="Saved look not found.")
-        row = conn.execute("SELECT * FROM saved_looks WHERE id = ?", (look_id,)).fetchone()
-    return _row_to_look(row)
+def set_favorite(
+    look_id: str, patch: FavoritePatch, repo: SavedLookRepository = Depends(get_saved_repo)
+) -> SavedLook:
+    look = repo.set_favorite(look_id, patch.favorite)
+    if look is None:
+        raise HTTPException(status_code=404, detail="Saved look not found.")
+    return look
 
 
 @router.delete("/{look_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_saved_look(look_id: str) -> Response:
-    with db() as conn:
-        conn.execute("DELETE FROM saved_looks WHERE id = ?", (look_id,))
+def delete_saved_look(look_id: str, repo: SavedLookRepository = Depends(get_saved_repo)) -> Response:
+    """Idempotent: deleting a look that is already gone still returns 204."""
+    repo.delete(look_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

@@ -3,13 +3,26 @@
     "id": "demo-floral-dress",
     "name": "Floral Dress",
     "category": "dresses",
-    "color": "Blue",
-    "tags": [
+    "subcategory": "casual dress",
+    "colors": [
+      "Blue"
+    ],
+    "styles": [
       "casual",
-      "party",
-      "travel",
       "western",
       "elegant"
+    ],
+    "occasions": [
+      "casual",
+      "party",
+      "travel"
+    ],
+    "fabric": "Chiffon",
+    "comfort": 4,
+    "price": 1799,
+    "tags": [
+      "floral",
+      "dress"
     ],
     "image": "/images/items/floral-dress.jpg",
     "createdAt": "2026-10-29T10:00:00.000Z"
@@ -17,15 +30,25 @@
   {
     "id": "demo-blue-kurti",
     "name": "Blue Kurti",
-    "category": "tops",
-    "color": "Blue",
-    "tags": [
+    "category": "kurtis",
+    "subcategory": "kurti",
+    "colors": [
+      "Blue"
+    ],
+    "styles": [
+      "traditional"
+    ],
+    "occasions": [
       "college",
       "office",
-      "festival",
-      "traditional",
-      "comfortable",
-      "kurti"
+      "festival"
+    ],
+    "fabric": "Cotton",
+    "comfort": 5,
+    "price": 899,
+    "tags": [
+      "kurti",
+      "comfortable"
     ],
     "image": "/images/items/blue-kurti.jpg",
     "createdAt": "2026-10-29T10:00:00.000Z"
@@ -34,15 +57,26 @@
     "id": "demo-white-top",
     "name": "White Top",
     "category": "tops",
-    "color": "White",
-    "tags": [
+    "subcategory": "top",
+    "colors": [
+      "White"
+    ],
+    "styles": [
+      "casual",
+      "western"
+    ],
+    "occasions": [
       "college",
       "casual",
       "office",
-      "travel",
+      "travel"
+    ],
+    "fabric": "Cotton",
+    "comfort": 4,
+    "price": 499,
+    "tags": [
       "minimal",
-      "simple",
-      "comfortable"
+      "simple"
     ],
     "image": "/images/items/white-top.jpg",
     "createdAt": "2026-10-29T10:00:00.000Z"
@@ -51,12 +85,24 @@
     "id": "demo-jeans",
     "name": "Jeans",
     "category": "bottoms",
-    "color": "Blue",
-    "tags": [
+    "subcategory": "jeans",
+    "colors": [
+      "Blue"
+    ],
+    "styles": [
+      "casual",
+      "western"
+    ],
+    "occasions": [
       "college",
       "casual",
-      "travel",
-      "western",
+      "travel"
+    ],
+    "fabric": "Denim",
+    "comfort": 4,
+    "price": 1499,
+    "tags": [
+      "denim",
       "comfortable"
     ],
     "image": "/images/items/jeans.jpg",
@@ -66,14 +112,24 @@
     "id": "demo-black-skirt",
     "name": "Black Skirt",
     "category": "bottoms",
-    "color": "Black",
-    "tags": [
-      "office",
-      "party",
+    "subcategory": "skirt",
+    "colors": [
+      "Black"
+    ],
+    "styles": [
       "western",
       "elegant",
-      "minimal",
       "trendy"
+    ],
+    "occasions": [
+      "office",
+      "party"
+    ],
+    "fabric": "Crepe",
+    "comfort": 3,
+    "price": 799,
+    "tags": [
+      "minimal"
     ],
     "image": "/images/items/black-skirt.jpg",
     "createdAt": "2026-10-29T10:00:00.000Z"
@@ -82,14 +138,26 @@
     "id": "demo-sneakers",
     "name": "Sneakers",
     "category": "footwear",
-    "color": "White",
-    "tags": [
+    "subcategory": "sneakers",
+    "colors": [
+      "White"
+    ],
+    "styles": [
+      "casual",
+      "western"
+    ],
+    "occasions": [
       "college",
       "casual",
-      "travel",
+      "travel"
+    ],
+    "fabric": "Canvas",
+    "comfort": 5,
+    "price": 1299,
+    "tags": [
+      "sneakers",
       "comfortable",
-      "simple",
-      "sneakers"
+      "simple"
     ],
     "image": "/images/items/sneakers.jpg",
     "createdAt": "2026-10-29T10:00:00.000Z"
@@ -98,12 +166,23 @@
     "id": "demo-heels",
     "name": "Heels",
     "category": "footwear",
-    "color": "Beige",
-    "tags": [
+    "subcategory": "heels",
+    "colors": [
+      "Beige"
+    ],
+    "styles": [
+      "elegant",
+      "western"
+    ],
+    "occasions": [
       "office",
       "party",
-      "wedding",
-      "elegant",
+      "wedding"
+    ],
+    "fabric": "Faux leather",
+    "comfort": 2,
+    "price": 1599,
+    "tags": [
       "heels"
     ],
     "image": "/images/items/heels.jpg",
@@ -113,13 +192,24 @@
     "id": "demo-handbag",
     "name": "Handbag",
     "category": "bags",
-    "color": "Pink",
-    "tags": [
+    "subcategory": "handbag",
+    "colors": [
+      "Pink"
+    ],
+    "styles": [
+      "elegant"
+    ],
+    "occasions": [
       "office",
       "party",
-      "wedding",
-      "elegant",
-      "handbag"
+      "wedding"
+    ],
+    "fabric": "Faux leather",
+    "comfort": 3,
+    "price": 1299,
+    "tags": [
+      "handbag",
+      "structured"
     ],
     "image": "/images/items/handbag.jpg",
     "createdAt": "2026-10-29T10:00:00.000Z"
@@ -128,15 +218,27 @@
     "id": "demo-earrings",
     "name": "Earrings",
     "category": "jewellery",
-    "color": "Gold",
-    "tags": [
+    "subcategory": "earrings",
+    "colors": [
+      "Gold"
+    ],
+    "styles": [
+      "elegant",
+      "traditional"
+    ],
+    "occasions": [
       "college",
       "office",
       "party",
       "wedding",
-      "elegant",
-      "minimal",
-      "earrings"
+      "festival"
+    ],
+    "fabric": "Metal",
+    "comfort": 4,
+    "price": 399,
+    "tags": [
+      "earrings",
+      "minimal"
     ],
     "image": "/images/items/earrings.jpg",
     "createdAt": "2026-10-29T10:00:00.000Z"
@@ -145,14 +247,26 @@
     "id": "demo-watch",
     "name": "Watch",
     "category": "jewellery",
-    "color": "Rose Gold",
-    "tags": [
+    "subcategory": "watch",
+    "colors": [
+      "Rose Gold"
+    ],
+    "styles": [
+      "casual",
+      "elegant"
+    ],
+    "occasions": [
       "college",
       "office",
       "casual",
-      "travel",
-      "minimal",
-      "watch"
+      "travel"
+    ],
+    "fabric": "Metal",
+    "comfort": 4,
+    "price": 1999,
+    "tags": [
+      "watch",
+      "minimal"
     ],
     "image": "/images/items/watch.jpg",
     "createdAt": "2026-10-29T10:00:00.000Z"
@@ -160,13 +274,24 @@
   {
     "id": "demo-lipstick",
     "name": "Lipstick",
-    "category": "beauty",
-    "color": "Red",
-    "tags": [
+    "category": "makeup",
+    "subcategory": "lipstick",
+    "colors": [
+      "Red"
+    ],
+    "styles": [
+      "elegant"
+    ],
+    "occasions": [
       "party",
       "wedding",
       "festival",
-      "office",
+      "office"
+    ],
+    "fabric": "",
+    "comfort": 5,
+    "price": 599,
+    "tags": [
       "lipstick"
     ],
     "image": "/images/items/lipstick.jpg",
@@ -175,12 +300,23 @@
   {
     "id": "demo-foundation",
     "name": "Foundation",
-    "category": "beauty",
-    "color": "Beige",
-    "tags": [
+    "category": "makeup",
+    "subcategory": "foundation",
+    "colors": [
+      "Beige"
+    ],
+    "styles": [
+      "elegant"
+    ],
+    "occasions": [
       "party",
       "wedding",
-      "office",
+      "office"
+    ],
+    "fabric": "",
+    "comfort": 5,
+    "price": 799,
+    "tags": [
       "foundation"
     ],
     "image": "/images/items/foundation.jpg",
@@ -189,13 +325,25 @@
   {
     "id": "demo-compact",
     "name": "Compact",
-    "category": "beauty",
-    "color": "Pink",
-    "tags": [
+    "category": "makeup",
+    "subcategory": "compact",
+    "colors": [
+      "Pink"
+    ],
+    "styles": [
+      "casual",
+      "elegant"
+    ],
+    "occasions": [
       "college",
       "casual",
       "office",
-      "travel",
+      "travel"
+    ],
+    "fabric": "",
+    "comfort": 5,
+    "price": 349,
+    "tags": [
       "compact",
       "minimal"
     ],
@@ -205,12 +353,23 @@
   {
     "id": "demo-perfume",
     "name": "Perfume",
-    "category": "beauty",
-    "color": "Pink",
-    "tags": [
+    "category": "skincare",
+    "subcategory": "fragrance",
+    "colors": [
+      "Pink"
+    ],
+    "styles": [
+      "elegant"
+    ],
+    "occasions": [
       "party",
       "wedding",
-      "festival",
+      "festival"
+    ],
+    "fabric": "",
+    "comfort": 5,
+    "price": 999,
+    "tags": [
       "perfume"
     ],
     "image": "/images/items/perfume.jpg",
@@ -219,12 +378,23 @@
   {
     "id": "demo-hair-serum",
     "name": "Hair Serum",
-    "category": "beauty",
-    "color": "Blue",
-    "tags": [
+    "category": "skincare",
+    "subcategory": "hair care",
+    "colors": [
+      "Blue"
+    ],
+    "styles": [
+      "casual"
+    ],
+    "occasions": [
       "college",
       "casual",
-      "travel",
+      "travel"
+    ],
+    "fabric": "",
+    "comfort": 5,
+    "price": 449,
+    "tags": [
       "hair-serum"
     ],
     "image": "/images/items/hair-serum.jpg",
@@ -233,17 +403,27 @@
   {
     "id": "demo-lavender-kurti",
     "name": "Lavender Kurti",
-    "category": "tops",
-    "color": "Purple",
-    "tags": [
+    "category": "kurtis",
+    "subcategory": "kurti",
+    "colors": [
+      "Purple"
+    ],
+    "styles": [
+      "traditional"
+    ],
+    "occasions": [
       "college",
       "casual",
       "office",
-      "festival",
-      "traditional",
+      "festival"
+    ],
+    "fabric": "Cotton",
+    "comfort": 5,
+    "price": 999,
+    "tags": [
+      "kurti",
       "comfortable",
       "simple",
-      "kurti",
       "lavender-kurti"
     ],
     "image": "/images/items/lavender-kurti.jpg",
@@ -253,12 +433,23 @@
     "id": "demo-white-trousers",
     "name": "White Trousers",
     "category": "bottoms",
-    "color": "White",
-    "tags": [
+    "subcategory": "trousers",
+    "colors": [
+      "White"
+    ],
+    "styles": [
+      "traditional",
+      "elegant"
+    ],
+    "occasions": [
       "college",
       "casual",
-      "office",
-      "traditional",
+      "office"
+    ],
+    "fabric": "Cotton blend",
+    "comfort": 4,
+    "price": 899,
+    "tags": [
       "minimal",
       "simple",
       "comfortable"
@@ -270,11 +461,22 @@
     "id": "demo-sling-bag",
     "name": "Beige Sling Bag",
     "category": "bags",
-    "color": "Beige",
-    "tags": [
+    "subcategory": "sling bag",
+    "colors": [
+      "Beige"
+    ],
+    "styles": [
+      "casual"
+    ],
+    "occasions": [
       "college",
       "casual",
-      "travel",
+      "travel"
+    ],
+    "fabric": "Canvas",
+    "comfort": 5,
+    "price": 699,
+    "tags": [
       "minimal",
       "simple",
       "sling-bag"

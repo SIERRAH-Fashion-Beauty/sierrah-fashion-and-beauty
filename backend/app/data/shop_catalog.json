@@ -1,0 +1,573 @@
+[
+  {
+    "id": "shop-tee",
+    "name": "Light Blue Tee",
+    "category": "tops",
+    "subcategory": "t-shirt",
+    "colors": [
+      "Blue"
+    ],
+    "price": 499,
+    "priceIsDemo": true,
+    "image": "/images/shop/tee.jpg",
+    "occasions": [
+      "casual",
+      "college",
+      "travel"
+    ],
+    "styles": [
+      "casual",
+      "western"
+    ],
+    "fabric": "Cotton",
+    "comfort": 5,
+    "description": "A soft relaxed-fit tee for easy everyday outfits."
+  },
+  {
+    "id": "shop-grey-top",
+    "name": "Grey Shirt Top",
+    "category": "tops",
+    "subcategory": "top",
+    "colors": [
+      "Grey"
+    ],
+    "price": 899,
+    "priceIsDemo": true,
+    "image": "/images/shop/grey-top.jpg",
+    "occasions": [
+      "office",
+      "college",
+      "casual"
+    ],
+    "styles": [
+      "elegant",
+      "western"
+    ],
+    "fabric": "Cotton blend",
+    "comfort": 4,
+    "description": "A twist-front top that dresses up jeans or skirts."
+  },
+  {
+    "id": "shop-formal-shirt",
+    "name": "White Formal Shirt",
+    "category": "tops",
+    "subcategory": "formal shirt",
+    "colors": [
+      "White"
+    ],
+    "price": 1199,
+    "priceIsDemo": true,
+    "image": "/images/shop/formal-shirt.jpg",
+    "occasions": [
+      "office"
+    ],
+    "styles": [
+      "elegant",
+      "western"
+    ],
+    "fabric": "Cotton",
+    "comfort": 3,
+    "description": "A crisp button-up shirt that anchors an office look."
+  },
+  {
+    "id": "shop-pink-kurti",
+    "name": "Pink Kurti",
+    "category": "kurtis",
+    "subcategory": "kurti",
+    "colors": [
+      "Pink"
+    ],
+    "price": 1499,
+    "priceIsDemo": true,
+    "image": "/images/shop/pink-kurti.jpg",
+    "occasions": [
+      "college",
+      "office",
+      "festival"
+    ],
+    "styles": [
+      "traditional"
+    ],
+    "fabric": "Cotton",
+    "comfort": 5,
+    "description": "Embroidered cotton kurti in a dusty rose shade."
+  },
+  {
+    "id": "shop-black-trousers",
+    "name": "Black Formal Trousers",
+    "category": "bottoms",
+    "subcategory": "trousers",
+    "colors": [
+      "Black"
+    ],
+    "price": 1299,
+    "priceIsDemo": true,
+    "image": "/images/shop/black-trousers.jpg",
+    "occasions": [
+      "office",
+      "party"
+    ],
+    "styles": [
+      "elegant",
+      "western"
+    ],
+    "fabric": "Polyester blend",
+    "comfort": 4,
+    "description": "Tailored straight-leg trousers for polished looks."
+  },
+  {
+    "id": "shop-party-dress",
+    "name": "Emerald Satin Dress",
+    "category": "dresses",
+    "subcategory": "party dress",
+    "colors": [
+      "Green"
+    ],
+    "price": 2499,
+    "priceIsDemo": true,
+    "image": "/images/shop/party-dress.jpg",
+    "occasions": [
+      "party"
+    ],
+    "styles": [
+      "elegant",
+      "trendy",
+      "western"
+    ],
+    "fabric": "Satin",
+    "comfort": 3,
+    "description": "A draped satin midi dress made for evenings out."
+  },
+  {
+    "id": "shop-silk-saree",
+    "name": "Maroon Silk Saree",
+    "category": "sarees",
+    "subcategory": "saree",
+    "colors": [
+      "Maroon",
+      "Gold"
+    ],
+    "price": 2999,
+    "priceIsDemo": true,
+    "image": "/images/shop/silk-saree.jpg",
+    "occasions": [
+      "wedding",
+      "festival"
+    ],
+    "styles": [
+      "traditional",
+      "elegant"
+    ],
+    "fabric": "Silk",
+    "comfort": 3,
+    "description": "A rich silk saree with a woven gold zari border."
+  },
+  {
+    "id": "shop-lehenga",
+    "name": "Rose Embroidered Lehenga Set",
+    "category": "sarees",
+    "subcategory": "lehenga",
+    "colors": [
+      "Pink"
+    ],
+    "price": 3999,
+    "priceIsDemo": true,
+    "image": "/images/shop/lehenga.jpg",
+    "occasions": [
+      "wedding",
+      "festival"
+    ],
+    "styles": [
+      "traditional",
+      "elegant"
+    ],
+    "fabric": "Net",
+    "comfort": 2,
+    "description": "A dusty rose lehenga set with a matching dupatta."
+  },
+  {
+    "id": "shop-white-sneakers",
+    "name": "White Sneakers",
+    "category": "footwear",
+    "subcategory": "sneakers",
+    "colors": [
+      "White"
+    ],
+    "price": 1299,
+    "priceIsDemo": true,
+    "image": "/images/shop/chunky-sneakers.jpg",
+    "occasions": [
+      "college",
+      "casual",
+      "travel"
+    ],
+    "styles": [
+      "casual",
+      "western"
+    ],
+    "fabric": "Canvas",
+    "comfort": 5,
+    "description": "Clean everyday sneakers that go with almost everything."
+  },
+  {
+    "id": "shop-flats",
+    "name": "Nude Ballet Flats",
+    "category": "footwear",
+    "subcategory": "flats",
+    "colors": [
+      "Beige"
+    ],
+    "price": 899,
+    "priceIsDemo": true,
+    "image": "/images/shop/flats.jpg",
+    "occasions": [
+      "college",
+      "office",
+      "casual",
+      "travel"
+    ],
+    "styles": [
+      "elegant",
+      "casual"
+    ],
+    "fabric": "Faux leather",
+    "comfort": 4,
+    "description": "Soft flats that pair with kurtis, trousers and dresses."
+  },
+  {
+    "id": "shop-block-heels",
+    "name": "Black Block Heels",
+    "category": "footwear",
+    "subcategory": "heels",
+    "colors": [
+      "Black"
+    ],
+    "price": 1599,
+    "priceIsDemo": true,
+    "image": "/images/shop/block-heels.jpg",
+    "occasions": [
+      "office",
+      "party"
+    ],
+    "styles": [
+      "elegant",
+      "western"
+    ],
+    "fabric": "Faux leather",
+    "comfort": 3,
+    "description": "Stable block heels that stay comfortable through a long day."
+  },
+  {
+    "id": "shop-juttis",
+    "name": "Embroidered Juttis",
+    "category": "footwear",
+    "subcategory": "juttis",
+    "colors": [
+      "Yellow",
+      "Gold"
+    ],
+    "price": 799,
+    "priceIsDemo": true,
+    "image": "/images/shop/juttis.jpg",
+    "occasions": [
+      "festival",
+      "wedding"
+    ],
+    "styles": [
+      "traditional"
+    ],
+    "fabric": "Embroidered fabric",
+    "comfort": 4,
+    "description": "Traditional flats that feel as good as they look."
+  },
+  {
+    "id": "shop-shoulder-bag",
+    "name": "Shoulder Bag",
+    "category": "bags",
+    "subcategory": "shoulder bag",
+    "colors": [
+      "Brown"
+    ],
+    "price": 999,
+    "priceIsDemo": true,
+    "image": "/images/shop/shoulder-bag.jpg",
+    "occasions": [
+      "college",
+      "casual",
+      "office",
+      "party"
+    ],
+    "styles": [
+      "casual",
+      "elegant"
+    ],
+    "fabric": "Faux leather",
+    "comfort": 4,
+    "description": "A tan chain-strap bag that lifts simple outfits."
+  },
+  {
+    "id": "shop-crossbody-bag",
+    "name": "Crossbody Bag",
+    "category": "bags",
+    "subcategory": "crossbody",
+    "colors": [
+      "Pink"
+    ],
+    "price": 1199,
+    "priceIsDemo": true,
+    "image": "/images/shop/crossbody-bag.jpg",
+    "occasions": [
+      "college",
+      "casual",
+      "travel"
+    ],
+    "styles": [
+      "casual",
+      "trendy"
+    ],
+    "fabric": "Faux leather",
+    "comfort": 5,
+    "description": "Hands-free pink crossbody for busy days."
+  },
+  {
+    "id": "shop-sling-bag",
+    "name": "Beige Sling Bag",
+    "category": "bags",
+    "subcategory": "sling bag",
+    "colors": [
+      "Beige"
+    ],
+    "price": 899,
+    "priceIsDemo": true,
+    "image": "/images/look/bag.jpg",
+    "occasions": [
+      "college",
+      "casual",
+      "travel"
+    ],
+    "styles": [
+      "casual"
+    ],
+    "fabric": "Canvas",
+    "comfort": 5,
+    "description": "Neutral sling that pairs with pastel kurtis."
+  },
+  {
+    "id": "shop-backpack",
+    "name": "Canvas Backpack",
+    "category": "bags",
+    "subcategory": "backpack",
+    "colors": [
+      "Brown",
+      "Beige"
+    ],
+    "price": 1399,
+    "priceIsDemo": true,
+    "image": "/images/shop/backpack.jpg",
+    "occasions": [
+      "college",
+      "travel"
+    ],
+    "styles": [
+      "casual"
+    ],
+    "fabric": "Canvas",
+    "comfort": 5,
+    "description": "Roomy backpack for books, laptops and long days."
+  },
+  {
+    "id": "shop-tote",
+    "name": "Structured Work Tote",
+    "category": "bags",
+    "subcategory": "tote",
+    "colors": [
+      "Black"
+    ],
+    "price": 1799,
+    "priceIsDemo": true,
+    "image": "/images/shop/tote.jpg",
+    "occasions": [
+      "office"
+    ],
+    "styles": [
+      "elegant",
+      "western"
+    ],
+    "fabric": "Faux leather",
+    "comfort": 4,
+    "description": "A structured tote that fits a laptop sleeve and planner."
+  },
+  {
+    "id": "shop-clutch",
+    "name": "Gold Evening Clutch",
+    "category": "bags",
+    "subcategory": "clutch",
+    "colors": [
+      "Gold"
+    ],
+    "price": 899,
+    "priceIsDemo": true,
+    "image": "/images/shop/clutch.jpg",
+    "occasions": [
+      "party",
+      "wedding",
+      "festival"
+    ],
+    "styles": [
+      "elegant",
+      "traditional"
+    ],
+    "fabric": "Embellished fabric",
+    "comfort": 3,
+    "description": "A small embellished clutch with a slim chain strap."
+  },
+  {
+    "id": "shop-statement-earrings",
+    "name": "Statement Earrings",
+    "category": "jewellery",
+    "subcategory": "jhumkas",
+    "colors": [
+      "Gold"
+    ],
+    "price": 799,
+    "priceIsDemo": true,
+    "image": "/images/shop/statement-earrings.jpg",
+    "occasions": [
+      "wedding",
+      "festival",
+      "party"
+    ],
+    "styles": [
+      "traditional",
+      "elegant"
+    ],
+    "fabric": "Metal",
+    "comfort": 3,
+    "description": "Kundan-style chandbalis for festive outfits."
+  },
+  {
+    "id": "shop-pearl-drops",
+    "name": "Pearl Drop Earrings",
+    "category": "jewellery",
+    "subcategory": "earrings",
+    "colors": [
+      "White",
+      "Gold"
+    ],
+    "price": 599,
+    "priceIsDemo": true,
+    "image": "/images/look/jewellery.jpg",
+    "occasions": [
+      "college",
+      "office",
+      "casual",
+      "party"
+    ],
+    "styles": [
+      "elegant",
+      "casual"
+    ],
+    "fabric": "Pearl",
+    "comfort": 4,
+    "description": "Light pearl drops for a soft, polished finish."
+  },
+  {
+    "id": "shop-gold-set",
+    "name": "Gold Necklace & Jhumka Set",
+    "category": "jewellery",
+    "subcategory": "necklace set",
+    "colors": [
+      "Gold"
+    ],
+    "price": 1999,
+    "priceIsDemo": true,
+    "image": "/images/shop/gold-set.jpg",
+    "occasions": [
+      "wedding",
+      "festival"
+    ],
+    "styles": [
+      "traditional"
+    ],
+    "fabric": "Gold plated",
+    "comfort": 3,
+    "description": "A temple-style necklace with matching jhumkas."
+  },
+  {
+    "id": "shop-nude-makeup",
+    "name": "Nude Makeup Set",
+    "category": "makeup",
+    "subcategory": "makeup kit",
+    "colors": [
+      "Beige",
+      "Pink"
+    ],
+    "price": 1299,
+    "priceIsDemo": true,
+    "image": "/images/look/makeup.jpg",
+    "occasions": [
+      "college",
+      "casual",
+      "office",
+      "travel"
+    ],
+    "styles": [
+      "casual",
+      "elegant"
+    ],
+    "fabric": "",
+    "comfort": 5,
+    "description": "Lip balm, blush duo and mascara for a fresh face."
+  },
+  {
+    "id": "shop-red-lipstick",
+    "name": "Classic Red Lipstick",
+    "category": "makeup",
+    "subcategory": "lipstick",
+    "colors": [
+      "Red"
+    ],
+    "price": 399,
+    "priceIsDemo": true,
+    "image": "/images/items/lipstick.jpg",
+    "occasions": [
+      "party",
+      "wedding",
+      "festival",
+      "office"
+    ],
+    "styles": [
+      "elegant",
+      "traditional"
+    ],
+    "fabric": "",
+    "comfort": 5,
+    "description": "A creamy red that lifts evening and festive looks."
+  },
+  {
+    "id": "shop-hair-serum",
+    "name": "Hair Serum",
+    "category": "skincare",
+    "subcategory": "hair care",
+    "colors": [
+      "Blue"
+    ],
+    "price": 499,
+    "priceIsDemo": true,
+    "image": "/images/items/hair-serum.jpg",
+    "occasions": [
+      "college",
+      "casual",
+      "travel",
+      "wedding",
+      "festival"
+    ],
+    "styles": [
+      "casual",
+      "elegant"
+    ],
+    "fabric": "",
+    "comfort": 5,
+    "description": "Smooths frizz for soft, glossy waves."
+  }
+]
