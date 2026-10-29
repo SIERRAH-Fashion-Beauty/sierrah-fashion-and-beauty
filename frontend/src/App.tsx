@@ -1,5 +1,6 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
+import { BASE_PATH } from './services/api';
 import { Layout } from './components/layout/Layout';
 import { EmptyState } from './components/ui/Feedback';
 import { HomePage } from './pages/HomePage';
@@ -28,7 +29,7 @@ function NotFound() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={BASE_PATH || undefined}>
       <AppProvider>
         <Routes>
           <Route element={<Layout />}>

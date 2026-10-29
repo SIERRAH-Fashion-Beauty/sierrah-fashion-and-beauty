@@ -84,8 +84,21 @@ async function request<T>(path: string, init: RequestInit = {}, timeoutMs = 5000
   }
 }
 
-/** Generated images are served by the API (`/media/...`); bundled sample photos are relative to the site. */
-export const resolveImageUrl = (url: string): string => (url.startsWith('/media/') ? `${API_BASE_URL}${url}` : url);
+/** Site base path ("" at the domain root, "/repo-name" on GitHub Pages). Set with VITE_BASE_PATH at build time. */
+export const BASE_PATH: string = (import.meta.env.BASE_URL as string).replace(/\/+$/, '');
+
+/**
+ * Generated images are served by the API (`/media/...`). Bundled photos are stored as
+ * root-relative paths (`/images/...`), so they are prefixed with the site's base path.
+ * Data URLs and absolute URLs are left alone.
+ */
+export const resolveImageUrl = (url: string): string => {
+  if (url.startsWith('/media/')) return `${API_BASE_URL}${url}`;
+  if (url.startsWith('/') && !url.startsWith('//') && !(BASE_PATH && url.startsWith(`${BASE_PATH}/`))) {
+    return `${BASE_PATH}${url}`;
+  }
+  return url;
+};
 
 export interface HealthResponse {
   status: string;

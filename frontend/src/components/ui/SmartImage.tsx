@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ImageOff } from 'lucide-react';
 import type { WardrobeCategory } from '../../types';
+import { resolveImageUrl } from '../../services/api';
 import { CategoryIcon } from './icons';
 
 interface Props {
@@ -19,7 +20,8 @@ interface Props {
  * Image with a soft skeleton while loading and an elegant fallback panel if the
  * file is missing or fails, so the UI never shows a broken-image icon.
  */
-export function SmartImage({ src, alt, className = '', imgClassName = '', position, eager, category }: Props) {
+export function SmartImage({ src: rawSrc, alt, className = '', imgClassName = '', position, eager, category }: Props) {
+  const src = rawSrc ? resolveImageUrl(rawSrc) : rawSrc;
   // Status is tied to the src it was reported for, so a new src automatically
   // reads as "loading" without an effect (which could clobber an early onLoad).
   const [result, setResult] = useState<{ src?: string; status: 'ready' | 'error' } | null>(null);

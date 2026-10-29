@@ -6,6 +6,7 @@ import { OfflineBanner, ToastHost } from '../ui/Feedback';
 import { SmartImage } from '../ui/SmartImage';
 import { ItemModal } from '../wardrobe/ItemModal';
 import { useApp } from '../../context/AppContext';
+import { resolveImageUrl } from '../../services/api';
 
 const STYLE_FLOW = ['/style', '/personalize', '/look', '/preview', '/shopping'];
 
@@ -20,7 +21,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <Link to="/" className="group flex items-center gap-3" aria-label="SIERRAH Fashion & Beauty home">
       <span className="relative block h-10 w-10 shrink-0 overflow-hidden rounded-full border border-dusty/70 shadow-card sm:h-11 sm:w-11">
-        <img src="/brand/logo.png" alt="" className="h-full w-full scale-[1.15] object-cover" />
+        <img src={resolveImageUrl('/brand/logo.png')} alt="" className="h-full w-full scale-[1.15] object-cover" />
       </span>
       <span className="leading-none">
         <span className="block font-serif text-2xl font-medium tracking-[0.22em] text-rosebrown sm:text-[1.65rem]">SIERRAH</span>
