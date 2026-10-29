@@ -187,6 +187,7 @@ python -m pytest tests/test_live_provider.py -q -s
 | File | Variable | Default | Purpose |
 |------|----------|---------|---------|
 | `frontend/.env` | `VITE_API_BASE_URL` | `http://127.0.0.1:8000` | Where the frontend finds the API (build-time) |
+| | `VITE_BASE_PATH` | `/` | Site base path; the Pages workflow sets `/<repo-name>/` (build-time) |
 | `backend/.env` | `DATABASE_PATH` | `data/sierrah.db` | SQLite file |
 | | `MEDIA_DIR` | `data/media` | Generated images |
 | | `SEED_DEMO_DATA` | `true` | Seed sample wardrobe and 4 sample saved looks on first run |
@@ -236,29 +237,40 @@ Seven built-in occasions (College, Casual, Office, Wedding, Party, Travel, Festi
 
 Outfits that clearly do not suit the occasion are gated out. Every outfit returns its items (each marked *yours* or *suggested*), accessories, makeup, hairstyle, tips, missing items, cheaper alternatives and an explanation. If the wardrobe cannot support the occasion (for example no wedding-appropriate piece), the response says so instead of faking a good match. The budget is treated as an upper bound for purchases.
 
-## Deployment
+## Deploy (GitHub Pages + Render)
 
-**Backend** (Render, Railway, Fly.io, a VM, etc.)
+The frontend is a static site on **GitHub Pages**; the API runs on **Render**. The repository already contains `render.yaml` (Render Blueprint) and `.github/workflows/deploy-frontend.yml` (Pages deploy).
 
-```
-pip install -r requirements.txt
-uvicorn app.main:app --host 0.0.0.0 --port $PORT
-```
+### 1. API on Render
 
-- Set `CORS_ORIGINS` to your frontend URL(s), `IMAGE_PROVIDER` and `IMAGE_API_KEY` as host secrets.
-- `DATABASE_PATH` and `MEDIA_DIR` must sit on a **persistent disk**. On ephemeral filesystems saved looks and images vanish on restart.
-- SQLite suits a single instance. Move to Postgres before scaling out. The rate limiter is also per process.
-- Consider `SEED_DEMO_DATA=false` for a real deployment.
+1. Sign in at <https://render.com> with GitHub and allow access to this repository.
+2. **New > Blueprint**, pick this repo, branch `main`. Render reads `render.yaml` and proposes a web service named `sierrah-api` (free plan, Singapore). Click **Apply**.
+3. Wait for the first deploy to go green, then open `https://<your-service>.onrender.com/health`. It should return `{"status":"ok",...}`. Copy that base URL (no trailing slash).
+4. If the URL is not exactly `https://sierrah-api.onrender.com` (the name was taken, Render added a suffix), set the repository variable in step 2 below.
+5. Optional AI images with Gemini: Render service > **Environment**: set `IMAGE_PROVIDER=gemini` and add `IMAGE_API_KEY` (a secret). Save to redeploy. With the default `pollinations` provider no key is needed.
 
-**Frontend** (Netlify, Vercel, Cloudflare Pages, S3 + CDN)
+`CORS_ORIGINS` in `render.yaml` already allows `https://sierrah-fashion-beauty.github.io`. If your Pages address differs (for example a custom domain), edit that value in Render > Environment.
 
-```
-cd frontend
-# set VITE_API_BASE_URL=https://your-api.example.com in the host's build settings
-npm install && npm run build      # publish frontend/dist
-```
+### 2. Frontend on GitHub Pages
 
-Add a single-page-app rewrite (`/* → /index.html`) so deep links like `/look` work. `VITE_` variables are baked into the bundle at build time.
+1. Repository **Settings > Pages > Build and deployment > Source: GitHub Actions**.
+2. Repository **Settings > Secrets and variables > Actions > Variables > New repository variable**: name `VITE_API_BASE_URL`, value your Render URL. Skip it only if your URL is exactly `https://sierrah-api.onrender.com`.
+3. Push to `main` (or **Actions > Deploy frontend to GitHub Pages > Run workflow**). The workflow builds with `VITE_BASE_PATH=/<repo-name>/`, adds a `404.html` fallback and publishes.
+4. Open `https://sierrah-fashion-beauty.github.io/sierrah-fashion-and-beauty/`.
+
+Changing the API URL later means updating the variable and re-running the workflow, because `VITE_` values are baked in at build time.
+
+### What to expect on the free tier
+
+- **Cold starts:** a free Render service sleeps after about 15 minutes idle. The first request afterwards takes roughly 30 to 60 seconds; the app shows its "backend not connected" banner with a Retry button until it wakes.
+- **Ephemeral data:** the free plan has no persistent disk. The SQLite database and generated images are lost on every restart or redeploy; the demo wardrobe is re-seeded and saved looks disappear. For persistence use a paid plan, attach a disk at `/var/data` and set `DATABASE_PATH=/var/data/sierrah.db`, `MEDIA_DIR=/var/data/media`.
+- **Single shared user:** there are no accounts. Everyone who opens the public site shares the same wardrobe and saved looks. Treat it as a demo, and do not store anything private in it.
+- **Public API and cost:** anyone can call the API. `IMAGE_MAX_PER_HOUR` caps image generation per server process, which limits the damage if you attach a paid key.
+- **Pollinations on Render:** its free limit is per IP and Render's outbound IPs are shared, so "one image at a time" errors can be frequent. Use Gemini or OpenAI for reliable previews.
+
+### Other hosts
+
+Any host that runs `pip install -r requirements.txt` and `uvicorn app.main:app --host 0.0.0.0 --port $PORT` works for the API (set `CORS_ORIGINS`, `DATABASE_PATH`, `MEDIA_DIR` on a persistent disk). Any static host works for the frontend: `cd frontend && npm ci && npm run build`, publish `frontend/dist`, add a single-page-app rewrite (`/* -> /index.html`), and set `VITE_API_BASE_URL` (and `VITE_BASE_PATH` if it is not served from the domain root) at build time.
 
 ## Offline behaviour
 
@@ -267,7 +279,7 @@ The wardrobe, saved looks and preferences are cached in `localStorage`. If the A
 ## Known limitations
 
 - The Pollinations provider has been exercised live. No live Gemini or OpenAI call has been exercised in this repository's tests. The Gemini request and response handling follows Google's published docs and is tested with a mock transport and a local fake server only. Run the opt-in live test with your key to confirm it.
-- Windows `.ps1` helper scripts and the deployment steps are untested.
+- Windows `.ps1` helper scripts are untested. The GitHub Pages build was verified against a local emulation (base path, `404.html` fallback, cross-origin API); the real Render and GitHub Actions runs have not been executed from here.
 - Prototype saved looks from the first version are deleted by the schema v1 → v2 migration.
 - Saved looks embed wardrobe images at save time, so later edits to an item do not change an old look.
 - The demo wardrobe has no sarees, so wedding results rely on kurtis or suggested items unless you add one.
