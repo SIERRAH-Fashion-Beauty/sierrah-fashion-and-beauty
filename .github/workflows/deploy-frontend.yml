@@ -1,0 +1,65 @@
+name: Deploy frontend to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/deploy-frontend.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      # The site lives at https://<owner>.github.io/<repo>/
+      VITE_BASE_PATH: /${{ github.event.repository.name }}/
+      # Set the repository variable VITE_API_BASE_URL (Settings > Secrets and variables > Actions > Variables)
+      # to your Render URL. The fallback is the URL Render gives a service named "sierrah-api".
+      VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL || 'https://sierrah-api.onrender.com' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Build (type-check + production bundle)
+        run: npm run build
+
+      # GitHub Pages has no single-page-app fallback; serving index.html as 404.html makes
+      # deep links such as /<repo>/wardrobe and page reloads work.
+      - name: SPA fallback
+        run: cp dist/index.html dist/404.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,32 @@
+# Render Blueprint for the SIERRAH API (FastAPI).
+# Render dashboard > New > Blueprint > pick this repository. See README, "Deploy".
+services:
+  - type: web
+    name: sierrah-api
+    runtime: python
+    plan: free
+    region: singapore
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      # Browser origins allowed to call the API (no path, no trailing slash).
+      - key: CORS_ORIGINS
+        value: https://sierrah-fashion-beauty.github.io,http://localhost:5173,http://127.0.0.1:5173
+      - key: SEED_DEMO_DATA
+        value: "true"
+      # Free image generation without a key. To use Gemini instead: change this to "gemini" and add a
+      # secret env var IMAGE_API_KEY in the Render dashboard (never in this file).
+      - key: IMAGE_PROVIDER
+        value: pollinations
+      - key: IMAGE_MAX_PER_HOUR
+        value: "30"
+      # Use the bundled CA list on Linux (the OS-store option is for corporate proxies on developer laptops).
+      - key: IMAGE_USE_SYSTEM_CA
+        value: "false"
+      # Free plan: the disk is ephemeral. With a paid plan, attach a disk at /var/data and set
+      # DATABASE_PATH=/var/data/sierrah.db and MEDIA_DIR=/var/data/media so data survives restarts.
