@@ -18,8 +18,8 @@ DISCLAIMER = (
     "likeness of you, so colours, cut and details can differ from the real items."
 )
 SETUP_MESSAGE = (
-    "AI model previews are not set up yet. Add IMAGE_PROVIDER=openai and IMAGE_API_KEY to backend/.env "
-    "and restart the API (see README, \"AI model images\")."
+    "AI model previews are not set up yet. Add IMAGE_PROVIDER=gemini (or openai) and IMAGE_API_KEY to "
+    "backend/.env and restart the API (see README, \"AI model images\")."
 )
 
 

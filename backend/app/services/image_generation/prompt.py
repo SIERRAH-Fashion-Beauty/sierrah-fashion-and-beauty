@@ -103,7 +103,7 @@ def build_prompt(outfit: Outfit, appearance: Appearance | None = None, *, with_r
 
     lines = [
         "Photorealistic full-length editorial fashion photograph for a premium fashion magazine.",
-        f"One {appearance_text(appearance)}, standing in a relaxed confident pose, "
+        f"A single subject: {appearance_text(appearance)}, standing in a relaxed confident pose, "
         "entire body visible from head to toe including both feet and shoes, centred in a portrait frame.",
     ]
     if "outfit" in by_slot and by_slot["outfit"].pieces:

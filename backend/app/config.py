@@ -35,6 +35,14 @@ def _float(name: str, default: float) -> float:
         return default
 
 
+def _image_api_key() -> str:
+    """``IMAGE_API_KEY``; for Gemini, ``GEMINI_API_KEY`` / ``GOOGLE_API_KEY`` also work."""
+    key = os.getenv("IMAGE_API_KEY", "").strip()
+    if not key and os.getenv("IMAGE_PROVIDER", "").strip().lower() in ("gemini", "google"):
+        key = (os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or "").strip()
+    return key
+
+
 def _resolve(raw: str) -> Path:
     path = Path(raw)
     return path if path.is_absolute() else BACKEND_DIR / path
@@ -74,13 +82,16 @@ class Settings:
     image_provider: str = field(
         default_factory=lambda: os.getenv("IMAGE_PROVIDER", "none").strip().lower()
     )
-    image_api_key: str = field(default_factory=lambda: os.getenv("IMAGE_API_KEY", "").strip())
+    image_api_key: str = field(default_factory=lambda: _image_api_key())
     image_model: str = field(default_factory=lambda: os.getenv("IMAGE_MODEL", "").strip())
     image_api_base_url: str = field(
         default_factory=lambda: os.getenv("IMAGE_API_BASE_URL", "").strip().rstrip("/")
     )
     image_size: str = field(default_factory=lambda: os.getenv("IMAGE_SIZE", "1024x1536").strip())
     image_quality: str = field(default_factory=lambda: os.getenv("IMAGE_QUALITY", "medium").strip())
+    # Gemini takes an aspect ratio and a resolution tier instead of a pixel size.
+    image_aspect_ratio: str = field(default_factory=lambda: os.getenv("IMAGE_ASPECT_RATIO", "2:3").strip())
+    image_resolution: str = field(default_factory=lambda: os.getenv("IMAGE_RESOLUTION", "1K").strip())
     image_timeout_seconds: float = field(default_factory=lambda: _float("IMAGE_TIMEOUT_SECONDS", 150))
     image_max_retries: int = field(default_factory=lambda: _int("IMAGE_MAX_RETRIES", 1))
     image_max_per_hour: int = field(default_factory=lambda: _int("IMAGE_MAX_PER_HOUR", 30))

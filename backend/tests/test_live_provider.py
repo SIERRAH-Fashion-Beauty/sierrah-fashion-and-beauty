@@ -1,9 +1,10 @@
 """Opt-in smoke test against the REAL image provider.
 
-Skipped by default because it spends money. Run it deliberately with your own key:
+Skipped by default because it spends quota/money. Run it deliberately with your own key:
 
     $env:SIERRAH_LIVE_IMAGE_TEST = "1"
-    $env:LIVE_IMAGE_API_KEY = "sk-..."
+    $env:LIVE_IMAGE_PROVIDER = "gemini"        # or "openai" (default)
+    $env:LIVE_IMAGE_API_KEY = "<your key>"
     python -m pytest tests/test_live_provider.py -s
 """
 
@@ -14,7 +15,7 @@ import pytest
 
 from app.config import get_settings
 from app.services.image_generation.prompt import build_prompt
-from app.services.image_generation.providers import OpenAIImageProvider
+from app.services.image_generation.providers import PROVIDERS
 
 pytestmark = pytest.mark.skipif(
     os.environ.get("SIERRAH_LIVE_IMAGE_TEST") != "1" or not os.environ.get("LIVE_IMAGE_API_KEY"),
@@ -25,13 +26,14 @@ pytestmark = pytest.mark.skipif(
 def test_real_provider_returns_a_valid_image(client):
     from app.schemas import Outfit
 
+    name = os.environ.get("LIVE_IMAGE_PROVIDER", "openai").lower()
     outfit = Outfit.model_validate(client.get("/api/saved-looks").json()[0])
     settings = dataclasses.replace(
         get_settings(),
-        image_provider="openai",
+        image_provider=name,
         image_api_key=os.environ["LIVE_IMAGE_API_KEY"],
         image_model=os.environ.get("LIVE_IMAGE_MODEL", ""),
         image_quality="low",
     )
-    result = OpenAIImageProvider(settings).generate(build_prompt(outfit), [])
+    result = PROVIDERS[name](settings).generate(build_prompt(outfit), [])
     assert result.mime in {"image/jpeg", "image/png", "image/webp"} and len(result.data) > 10_000
