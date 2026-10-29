@@ -1,0 +1,327 @@
+{
+  "id": "demo-look",
+  "requestId": "req-78686173d01f",
+  "rank": 2,
+  "title": "College Casual Look",
+  "score": 89.1,
+  "scoreLabel": "Excellent match",
+  "breakdown": [
+    {
+      "key": "occasion",
+      "label": "Occasion fit",
+      "points": 29.7,
+      "maxPoints": 35.0
+    },
+    {
+      "key": "color",
+      "label": "Colour harmony",
+      "points": 16.1,
+      "maxPoints": 17.0
+    },
+    {
+      "key": "style",
+      "label": "Style match",
+      "points": 9.1,
+      "maxPoints": 13.0
+    },
+    {
+      "key": "comfort",
+      "label": "Comfort",
+      "points": 9.2,
+      "maxPoints": 10.0
+    },
+    {
+      "key": "completeness",
+      "label": "Complete look",
+      "points": 15.0,
+      "maxPoints": 15.0
+    },
+    {
+      "key": "budget",
+      "label": "Budget friendliness",
+      "points": 10.0,
+      "maxPoints": 10.0
+    }
+  ],
+  "whyItWorks": [
+    "Lavender Kurti + White Trousers: you tagged Lavender Kurti, White Trousers for college, and it fits the college dress level.",
+    "The colours sit well together: neutrals and tonal shades keep it cohesive.",
+    "Includes your favourite colour: Purple.",
+    "None of the main pieces are tagged casual, so this is the best fit on other factors.",
+    "Comfort matters here: the main pieces average 4.5/5 for comfort.",
+    "Built entirely from pieces you already own. Nothing to buy.",
+    "Practical bag and simple, small accessories keep the look campus-ready."
+  ],
+  "occasion": "college",
+  "occasionLabel": "College",
+  "resolvedOccasion": "college",
+  "preferences": {
+    "occasion": "college",
+    "customOccasion": null,
+    "style": "casual",
+    "colors": [
+      "Purple"
+    ],
+    "budget": "500-1500",
+    "comfort": "medium",
+    "traits": [
+      "comfortable",
+      "simple"
+    ],
+    "notes": ""
+  },
+  "appearance": null,
+  "items": [
+    {
+      "slot": "outfit",
+      "title": "Lavender Kurti + White Trousers",
+      "category": "outfit",
+      "detail": "Purple cotton + White cotton blend",
+      "image": "/images/items/lavender-kurti.jpg",
+      "source": "wardrobe",
+      "pieces": [
+        {
+          "category": "kurtis",
+          "name": "Lavender Kurti",
+          "subcategory": "kurti",
+          "colors": [
+            "Purple"
+          ],
+          "fabric": "Cotton",
+          "image": "/images/items/lavender-kurti.jpg",
+          "source": "wardrobe",
+          "wardrobeItemId": "demo-lavender-kurti",
+          "shopItemId": null,
+          "price": null
+        },
+        {
+          "category": "bottoms",
+          "name": "White Trousers",
+          "subcategory": "trousers",
+          "colors": [
+            "White"
+          ],
+          "fabric": "Cotton blend",
+          "image": "/images/items/white-trousers.jpg",
+          "source": "wardrobe",
+          "wardrobeItemId": "demo-white-trousers",
+          "shopItemId": null,
+          "price": null
+        }
+      ],
+      "wardrobeItemIds": [
+        "demo-lavender-kurti",
+        "demo-white-trousers"
+      ],
+      "shopItemId": null
+    },
+    {
+      "slot": "footwear",
+      "title": "Sneakers",
+      "category": "footwear",
+      "detail": "White canvas",
+      "image": "/images/items/sneakers.jpg",
+      "source": "wardrobe",
+      "pieces": [
+        {
+          "category": "footwear",
+          "name": "Sneakers",
+          "subcategory": "sneakers",
+          "colors": [
+            "White"
+          ],
+          "fabric": "Canvas",
+          "image": "/images/items/sneakers.jpg",
+          "source": "wardrobe",
+          "wardrobeItemId": "demo-sneakers",
+          "shopItemId": null,
+          "price": null
+        }
+      ],
+      "wardrobeItemIds": [
+        "demo-sneakers"
+      ],
+      "shopItemId": null
+    },
+    {
+      "slot": "bag",
+      "title": "Beige Sling Bag",
+      "category": "bags",
+      "detail": "Beige canvas",
+      "image": "/images/items/sling-bag.jpg",
+      "source": "wardrobe",
+      "pieces": [
+        {
+          "category": "bags",
+          "name": "Beige Sling Bag",
+          "subcategory": "sling bag",
+          "colors": [
+            "Beige"
+          ],
+          "fabric": "Canvas",
+          "image": "/images/items/sling-bag.jpg",
+          "source": "wardrobe",
+          "wardrobeItemId": "demo-sling-bag",
+          "shopItemId": null,
+          "price": null
+        }
+      ],
+      "wardrobeItemIds": [
+        "demo-sling-bag"
+      ],
+      "shopItemId": null
+    },
+    {
+      "slot": "jewellery",
+      "title": "Watch + Earrings",
+      "category": "jewellery",
+      "detail": "Rose Gold metal + Gold metal",
+      "image": "/images/items/watch.jpg",
+      "source": "wardrobe",
+      "pieces": [
+        {
+          "category": "jewellery",
+          "name": "Watch",
+          "subcategory": "watch",
+          "colors": [
+            "Rose Gold"
+          ],
+          "fabric": "Metal",
+          "image": "/images/items/watch.jpg",
+          "source": "wardrobe",
+          "wardrobeItemId": "demo-watch",
+          "shopItemId": null,
+          "price": null
+        },
+        {
+          "category": "jewellery",
+          "name": "Earrings",
+          "subcategory": "earrings",
+          "colors": [
+            "Gold"
+          ],
+          "fabric": "Metal",
+          "image": "/images/items/earrings.jpg",
+          "source": "wardrobe",
+          "wardrobeItemId": "demo-earrings",
+          "shopItemId": null,
+          "price": null
+        }
+      ],
+      "wardrobeItemIds": [
+        "demo-watch",
+        "demo-earrings"
+      ],
+      "shopItemId": null
+    },
+    {
+      "slot": "makeup",
+      "title": "Natural Fresh Look",
+      "category": "makeup",
+      "detail": "Skin tint or compact, a touch of mascara and a soft lip balm. · Uses your Compact, Foundation",
+      "image": "/images/items/compact.jpg",
+      "source": "wardrobe",
+      "pieces": [
+        {
+          "category": "makeup",
+          "name": "Compact",
+          "subcategory": "compact",
+          "colors": [
+            "Pink"
+          ],
+          "fabric": "",
+          "image": "/images/items/compact.jpg",
+          "source": "wardrobe",
+          "wardrobeItemId": "demo-compact",
+          "shopItemId": null,
+          "price": null
+        },
+        {
+          "category": "makeup",
+          "name": "Foundation",
+          "subcategory": "foundation",
+          "colors": [
+            "Beige"
+          ],
+          "fabric": "",
+          "image": "/images/items/foundation.jpg",
+          "source": "wardrobe",
+          "wardrobeItemId": "demo-foundation",
+          "shopItemId": null,
+          "price": null
+        }
+      ],
+      "wardrobeItemIds": [
+        "demo-compact",
+        "demo-foundation"
+      ],
+      "shopItemId": null
+    },
+    {
+      "slot": "hairstyle",
+      "title": "High Ponytail",
+      "category": "hairstyle",
+      "detail": "A sleek high ponytail that stays put all day. · Finish with your Hair Serum",
+      "image": "/images/look/hairstyle.jpg",
+      "source": "tip",
+      "pieces": [],
+      "wardrobeItemIds": [],
+      "shopItemId": null
+    }
+  ],
+  "accessories": [
+    {
+      "category": "bags",
+      "name": "Beige Sling Bag",
+      "subcategory": "sling bag",
+      "colors": [
+        "Beige"
+      ],
+      "fabric": "Canvas",
+      "image": "/images/items/sling-bag.jpg",
+      "source": "wardrobe",
+      "wardrobeItemId": "demo-sling-bag",
+      "shopItemId": null,
+      "price": null
+    },
+    {
+      "category": "jewellery",
+      "name": "Watch",
+      "subcategory": "watch",
+      "colors": [
+        "Rose Gold"
+      ],
+      "fabric": "Metal",
+      "image": "/images/items/watch.jpg",
+      "source": "wardrobe",
+      "wardrobeItemId": "demo-watch",
+      "shopItemId": null,
+      "price": null
+    },
+    {
+      "category": "jewellery",
+      "name": "Earrings",
+      "subcategory": "earrings",
+      "colors": [
+        "Gold"
+      ],
+      "fabric": "Metal",
+      "image": "/images/items/earrings.jpg",
+      "source": "wardrobe",
+      "wardrobeItemId": "demo-earrings",
+      "shopItemId": null,
+      "price": null
+    }
+  ],
+  "stylingTips": [
+    "Stick to two main colours and let the bag or shoes add the third.",
+    "Choose breathable cotton so you stay comfortable between lectures.",
+    "Finish with a tiny pair of earrings rather than a big statement piece.",
+    "You picked Purple. Repeat it in a small accessory such as a lip colour or bag for a cohesive finish."
+  ],
+  "missingItems": [],
+  "suggestedTotal": 0.0,
+  "budgetMax": 1500.0,
+  "image": null,
+  "generatedAt": "2026-10-29T14:06:43.698Z"
+}

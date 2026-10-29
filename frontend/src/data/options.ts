@@ -1,14 +1,61 @@
-import type { BudgetId, Occasion, PreferenceId, StyleId, WardrobeCategory } from '../types';
+import type { Appearance, BudgetId, ComfortLevel, ConcreteOccasion, Occasion, PreferenceId, StyleId, WardrobeCategory } from '../types';
 
 export const CATEGORIES: { id: WardrobeCategory; label: string }[] = [
   { id: 'tops', label: 'Tops' },
   { id: 'bottoms', label: 'Bottoms' },
   { id: 'dresses', label: 'Dresses' },
+  { id: 'kurtis', label: 'Kurtis' },
+  { id: 'sarees', label: 'Sarees' },
   { id: 'footwear', label: 'Footwear' },
   { id: 'bags', label: 'Bags' },
   { id: 'jewellery', label: 'Jewellery' },
-  { id: 'beauty', label: 'Beauty' },
+  { id: 'makeup', label: 'Makeup' },
+  { id: 'skincare', label: 'Skincare' },
 ];
+
+export const COMFORT_LEVELS: { id: ComfortLevel; label: string }[] = [
+  { id: 'low', label: 'Style first' },
+  { id: 'medium', label: 'Balanced' },
+  { id: 'high', label: 'Comfort first' },
+];
+
+export const COMFORT_RATINGS: { value: number; label: string }[] = [
+  { value: 1, label: '1 · Stiff' },
+  { value: 2, label: '2 · Dressy' },
+  { value: 3, label: '3 · Balanced' },
+  { value: 4, label: '4 · Comfortable' },
+  { value: 5, label: '5 · Very comfortable' },
+];
+
+/** Optional model-appearance choices. Only these fixed values ever reach the image prompt. */
+export const APPEARANCE_OPTIONS: { key: keyof Appearance; label: string; values: string[] }[] = [
+  { key: 'skinTone', label: 'Skin tone', values: ['fair', 'wheatish', 'medium', 'olive', 'tan', 'deep'] },
+  { key: 'hairLength', label: 'Hair length', values: ['short', 'medium', 'long'] },
+  { key: 'hairTexture', label: 'Hair texture', values: ['straight', 'wavy', 'curly'] },
+  { key: 'build', label: 'Body build', values: ['slim', 'athletic', 'average', 'curvy', 'plus-size'] },
+];
+
+/** Concrete occasions a wardrobe item can be tagged for. */
+export const ITEM_OCCASIONS: { id: ConcreteOccasion; label: string }[] = [
+  { id: 'college', label: 'College' },
+  { id: 'casual', label: 'Casual' },
+  { id: 'office', label: 'Office' },
+  { id: 'wedding', label: 'Wedding' },
+  { id: 'party', label: 'Party' },
+  { id: 'travel', label: 'Travel' },
+  { id: 'festival', label: 'Festival' },
+];
+
+/** Curated editorial photos. They are illustrations, never presented as AI-generated. */
+export const SAMPLE_MODEL_PHOTO: Record<string, string> = {
+  college: '/images/models/college.jpg',
+  casual: '/images/models/casual.jpg',
+  office: '/images/models/office.jpg',
+  wedding: '/images/models/wedding.jpg',
+  party: '/images/models/party.jpg',
+  travel: '/images/models/travel.jpg',
+  festival: '/images/models/festival.jpg',
+};
 
 export const OCCASIONS: Occasion[] = [
   { id: 'college', label: 'College', image: '/images/models/college.jpg', blurb: 'Comfortable and put-together for campus days.' },

@@ -1,0 +1,1242 @@
+[
+  {
+    "id": "seed-college",
+    "requestId": "req-bc0bab871388",
+    "rank": 1,
+    "title": "College Casual Look · Lavender Kurti + Jeans",
+    "score": 91.5,
+    "scoreLabel": "Excellent match",
+    "breakdown": [
+      {
+        "key": "occasion",
+        "label": "Occasion fit",
+        "points": 31.4,
+        "maxPoints": 35.0
+      },
+      {
+        "key": "color",
+        "label": "Colour harmony",
+        "points": 15.9,
+        "maxPoints": 17.0
+      },
+      {
+        "key": "style",
+        "label": "Style match",
+        "points": 10.0,
+        "maxPoints": 13.0
+      },
+      {
+        "key": "comfort",
+        "label": "Comfort",
+        "points": 9.2,
+        "maxPoints": 10.0
+      },
+      {
+        "key": "completeness",
+        "label": "Complete look",
+        "points": 15.0,
+        "maxPoints": 15.0
+      },
+      {
+        "key": "budget",
+        "label": "Budget friendliness",
+        "points": 10.0,
+        "maxPoints": 10.0
+      }
+    ],
+    "whyItWorks": [
+      "Lavender Kurti + Jeans: you tagged Lavender Kurti, Jeans for college, and it fits the college dress level.",
+      "The colours sit well together: neutrals and tonal shades keep it cohesive.",
+      "Includes your favourite colour: Purple.",
+      "Matches your casual style preference (Jeans).",
+      "Comfort matters here: the main pieces average 4.5/5 for comfort.",
+      "Built entirely from pieces you already own. Nothing to buy.",
+      "Practical bag and simple, small accessories keep the look campus-ready."
+    ],
+    "occasion": "college",
+    "occasionLabel": "College",
+    "resolvedOccasion": "college",
+    "preferences": {
+      "occasion": "college",
+      "customOccasion": null,
+      "style": "casual",
+      "colors": [
+        "Purple"
+      ],
+      "budget": "500-1500",
+      "comfort": "medium",
+      "traits": [
+        "comfortable",
+        "simple"
+      ],
+      "notes": ""
+    },
+    "appearance": null,
+    "items": [
+      {
+        "slot": "outfit",
+        "title": "Lavender Kurti + Jeans",
+        "category": "outfit",
+        "detail": "Purple cotton + Blue denim",
+        "image": "/images/items/lavender-kurti.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "kurtis",
+            "name": "Lavender Kurti",
+            "subcategory": "kurti",
+            "colors": [
+              "Purple"
+            ],
+            "fabric": "Cotton",
+            "image": "/images/items/lavender-kurti.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-lavender-kurti",
+            "shopItemId": null,
+            "price": null
+          },
+          {
+            "category": "bottoms",
+            "name": "Jeans",
+            "subcategory": "jeans",
+            "colors": [
+              "Blue"
+            ],
+            "fabric": "Denim",
+            "image": "/images/items/jeans.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-jeans",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-lavender-kurti",
+          "demo-jeans"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "footwear",
+        "title": "Sneakers",
+        "category": "footwear",
+        "detail": "White canvas",
+        "image": "/images/items/sneakers.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "footwear",
+            "name": "Sneakers",
+            "subcategory": "sneakers",
+            "colors": [
+              "White"
+            ],
+            "fabric": "Canvas",
+            "image": "/images/items/sneakers.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-sneakers",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-sneakers"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "bag",
+        "title": "Beige Sling Bag",
+        "category": "bags",
+        "detail": "Beige canvas",
+        "image": "/images/items/sling-bag.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "bags",
+            "name": "Beige Sling Bag",
+            "subcategory": "sling bag",
+            "colors": [
+              "Beige"
+            ],
+            "fabric": "Canvas",
+            "image": "/images/items/sling-bag.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-sling-bag",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-sling-bag"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "jewellery",
+        "title": "Watch + Earrings",
+        "category": "jewellery",
+        "detail": "Rose Gold metal + Gold metal",
+        "image": "/images/items/watch.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "jewellery",
+            "name": "Watch",
+            "subcategory": "watch",
+            "colors": [
+              "Rose Gold"
+            ],
+            "fabric": "Metal",
+            "image": "/images/items/watch.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-watch",
+            "shopItemId": null,
+            "price": null
+          },
+          {
+            "category": "jewellery",
+            "name": "Earrings",
+            "subcategory": "earrings",
+            "colors": [
+              "Gold"
+            ],
+            "fabric": "Metal",
+            "image": "/images/items/earrings.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-earrings",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-watch",
+          "demo-earrings"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "makeup",
+        "title": "Natural Fresh Look",
+        "category": "makeup",
+        "detail": "Skin tint or compact, a touch of mascara and a soft lip balm. · Uses your Compact, Foundation",
+        "image": "/images/items/compact.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "makeup",
+            "name": "Compact",
+            "subcategory": "compact",
+            "colors": [
+              "Pink"
+            ],
+            "fabric": "",
+            "image": "/images/items/compact.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-compact",
+            "shopItemId": null,
+            "price": null
+          },
+          {
+            "category": "makeup",
+            "name": "Foundation",
+            "subcategory": "foundation",
+            "colors": [
+              "Beige"
+            ],
+            "fabric": "",
+            "image": "/images/items/foundation.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-foundation",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-compact",
+          "demo-foundation"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "hairstyle",
+        "title": "High Ponytail",
+        "category": "hairstyle",
+        "detail": "A sleek high ponytail that stays put all day. · Finish with your Hair Serum",
+        "image": "/images/look/hairstyle.jpg",
+        "source": "tip",
+        "pieces": [],
+        "wardrobeItemIds": [],
+        "shopItemId": null
+      }
+    ],
+    "accessories": [
+      {
+        "category": "bags",
+        "name": "Beige Sling Bag",
+        "subcategory": "sling bag",
+        "colors": [
+          "Beige"
+        ],
+        "fabric": "Canvas",
+        "image": "/images/items/sling-bag.jpg",
+        "source": "wardrobe",
+        "wardrobeItemId": "demo-sling-bag",
+        "shopItemId": null,
+        "price": null
+      },
+      {
+        "category": "jewellery",
+        "name": "Watch",
+        "subcategory": "watch",
+        "colors": [
+          "Rose Gold"
+        ],
+        "fabric": "Metal",
+        "image": "/images/items/watch.jpg",
+        "source": "wardrobe",
+        "wardrobeItemId": "demo-watch",
+        "shopItemId": null,
+        "price": null
+      },
+      {
+        "category": "jewellery",
+        "name": "Earrings",
+        "subcategory": "earrings",
+        "colors": [
+          "Gold"
+        ],
+        "fabric": "Metal",
+        "image": "/images/items/earrings.jpg",
+        "source": "wardrobe",
+        "wardrobeItemId": "demo-earrings",
+        "shopItemId": null,
+        "price": null
+      }
+    ],
+    "stylingTips": [
+      "Stick to two main colours and let the bag or shoes add the third.",
+      "Choose breathable cotton so you stay comfortable between lectures.",
+      "Finish with a tiny pair of earrings rather than a big statement piece.",
+      "You picked Purple. Repeat it in a small accessory such as a lip colour or bag for a cohesive finish."
+    ],
+    "missingItems": [],
+    "suggestedTotal": 0.0,
+    "budgetMax": 1500.0,
+    "image": null,
+    "generatedAt": "2026-10-28T09:00:00.000Z",
+    "favorite": false,
+    "savedAt": "2026-10-28T09:00:00.000Z",
+    "isSample": true
+  },
+  {
+    "id": "seed-office",
+    "requestId": "req-4df934487eca",
+    "rank": 1,
+    "title": "Office Elegant Look · White Top + Black Skirt",
+    "score": 90.6,
+    "scoreLabel": "Excellent match",
+    "breakdown": [
+      {
+        "key": "occasion",
+        "label": "Occasion fit",
+        "points": 30.0,
+        "maxPoints": 35.0
+      },
+      {
+        "key": "color",
+        "label": "Colour harmony",
+        "points": 16.1,
+        "maxPoints": 17.0
+      },
+      {
+        "key": "style",
+        "label": "Style match",
+        "points": 12.1,
+        "maxPoints": 13.0
+      },
+      {
+        "key": "comfort",
+        "label": "Comfort",
+        "points": 7.4,
+        "maxPoints": 10.0
+      },
+      {
+        "key": "completeness",
+        "label": "Complete look",
+        "points": 15.0,
+        "maxPoints": 15.0
+      },
+      {
+        "key": "budget",
+        "label": "Budget friendliness",
+        "points": 10.0,
+        "maxPoints": 10.0
+      }
+    ],
+    "whyItWorks": [
+      "White Top + Black Skirt: you tagged White Top, Black Skirt for office, and it fits the office dress level.",
+      "The colours sit well together: neutrals and tonal shades keep it cohesive.",
+      "Includes your favourite colours: Black, White.",
+      "Matches your elegant style preference (Black Skirt).",
+      "Built entirely from pieces you already own. Nothing to buy.",
+      "Subtle jewellery and a structured bag read polished."
+    ],
+    "occasion": "office",
+    "occasionLabel": "Office",
+    "resolvedOccasion": "office",
+    "preferences": {
+      "occasion": "office",
+      "customOccasion": null,
+      "style": "elegant",
+      "colors": [
+        "Black",
+        "White"
+      ],
+      "budget": "500-1500",
+      "comfort": "medium",
+      "traits": [
+        "minimal"
+      ],
+      "notes": ""
+    },
+    "appearance": null,
+    "items": [
+      {
+        "slot": "outfit",
+        "title": "White Top + Black Skirt",
+        "category": "outfit",
+        "detail": "White cotton + Black crepe",
+        "image": "/images/items/white-top.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "tops",
+            "name": "White Top",
+            "subcategory": "top",
+            "colors": [
+              "White"
+            ],
+            "fabric": "Cotton",
+            "image": "/images/items/white-top.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-white-top",
+            "shopItemId": null,
+            "price": null
+          },
+          {
+            "category": "bottoms",
+            "name": "Black Skirt",
+            "subcategory": "skirt",
+            "colors": [
+              "Black"
+            ],
+            "fabric": "Crepe",
+            "image": "/images/items/black-skirt.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-black-skirt",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-white-top",
+          "demo-black-skirt"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "footwear",
+        "title": "Heels",
+        "category": "footwear",
+        "detail": "Beige faux leather",
+        "image": "/images/items/heels.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "footwear",
+            "name": "Heels",
+            "subcategory": "heels",
+            "colors": [
+              "Beige"
+            ],
+            "fabric": "Faux leather",
+            "image": "/images/items/heels.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-heels",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-heels"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "bag",
+        "title": "Handbag",
+        "category": "bags",
+        "detail": "Pink faux leather",
+        "image": "/images/items/handbag.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "bags",
+            "name": "Handbag",
+            "subcategory": "handbag",
+            "colors": [
+              "Pink"
+            ],
+            "fabric": "Faux leather",
+            "image": "/images/items/handbag.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-handbag",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-handbag"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "jewellery",
+        "title": "Earrings + Watch",
+        "category": "jewellery",
+        "detail": "Gold metal + Rose Gold metal",
+        "image": "/images/items/earrings.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "jewellery",
+            "name": "Earrings",
+            "subcategory": "earrings",
+            "colors": [
+              "Gold"
+            ],
+            "fabric": "Metal",
+            "image": "/images/items/earrings.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-earrings",
+            "shopItemId": null,
+            "price": null
+          },
+          {
+            "category": "jewellery",
+            "name": "Watch",
+            "subcategory": "watch",
+            "colors": [
+              "Rose Gold"
+            ],
+            "fabric": "Metal",
+            "image": "/images/items/watch.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-watch",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-earrings",
+          "demo-watch"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "makeup",
+        "title": "Soft Neutral",
+        "category": "makeup",
+        "detail": "Matte base, subtle lip and defined brows. · Uses your Lipstick, Foundation, Compact",
+        "image": "/images/items/lipstick.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "makeup",
+            "name": "Lipstick",
+            "subcategory": "lipstick",
+            "colors": [
+              "Red"
+            ],
+            "fabric": "",
+            "image": "/images/items/lipstick.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-lipstick",
+            "shopItemId": null,
+            "price": null
+          },
+          {
+            "category": "makeup",
+            "name": "Foundation",
+            "subcategory": "foundation",
+            "colors": [
+              "Beige"
+            ],
+            "fabric": "",
+            "image": "/images/items/foundation.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-foundation",
+            "shopItemId": null,
+            "price": null
+          },
+          {
+            "category": "makeup",
+            "name": "Compact",
+            "subcategory": "compact",
+            "colors": [
+              "Pink"
+            ],
+            "fabric": "",
+            "image": "/images/items/compact.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-compact",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-lipstick",
+          "demo-foundation",
+          "demo-compact"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "hairstyle",
+        "title": "Sleek Low Ponytail",
+        "category": "hairstyle",
+        "detail": "Neat and meeting-ready. · Finish with your Hair Serum",
+        "image": "/images/look/hairstyle.jpg",
+        "source": "tip",
+        "pieces": [],
+        "wardrobeItemIds": [],
+        "shopItemId": null
+      }
+    ],
+    "accessories": [
+      {
+        "category": "bags",
+        "name": "Handbag",
+        "subcategory": "handbag",
+        "colors": [
+          "Pink"
+        ],
+        "fabric": "Faux leather",
+        "image": "/images/items/handbag.jpg",
+        "source": "wardrobe",
+        "wardrobeItemId": "demo-handbag",
+        "shopItemId": null,
+        "price": null
+      },
+      {
+        "category": "jewellery",
+        "name": "Earrings",
+        "subcategory": "earrings",
+        "colors": [
+          "Gold"
+        ],
+        "fabric": "Metal",
+        "image": "/images/items/earrings.jpg",
+        "source": "wardrobe",
+        "wardrobeItemId": "demo-earrings",
+        "shopItemId": null,
+        "price": null
+      },
+      {
+        "category": "jewellery",
+        "name": "Watch",
+        "subcategory": "watch",
+        "colors": [
+          "Rose Gold"
+        ],
+        "fabric": "Metal",
+        "image": "/images/items/watch.jpg",
+        "source": "wardrobe",
+        "wardrobeItemId": "demo-watch",
+        "shopItemId": null,
+        "price": null
+      }
+    ],
+    "stylingTips": [
+      "Keep the palette tonal: cream, black, navy or soft pastels.",
+      "Let one accessory be the focus, not three.",
+      "Carry a spare compact for a mid-day refresh.",
+      "You picked Black, White. Repeat it in a small accessory such as a lip colour or bag for a cohesive finish.",
+      "Your Heels are dressy but less comfortable; carry flats for later if you will be on your feet."
+    ],
+    "missingItems": [],
+    "suggestedTotal": 0.0,
+    "budgetMax": 1500.0,
+    "image": null,
+    "generatedAt": "2026-10-27T09:00:00.000Z",
+    "favorite": true,
+    "savedAt": "2026-10-27T09:00:00.000Z",
+    "isSample": true
+  },
+  {
+    "id": "seed-wedding",
+    "requestId": "req-947a1eb412a1",
+    "rank": 1,
+    "title": "Wedding Traditional Look · Maroon Silk Saree",
+    "score": 78.8,
+    "scoreLabel": "Great match",
+    "breakdown": [
+      {
+        "key": "occasion",
+        "label": "Occasion fit",
+        "points": 30.8,
+        "maxPoints": 35.0
+      },
+      {
+        "key": "color",
+        "label": "Colour harmony",
+        "points": 16.0,
+        "maxPoints": 17.0
+      },
+      {
+        "key": "style",
+        "label": "Style match",
+        "points": 6.5,
+        "maxPoints": 13.0
+      },
+      {
+        "key": "comfort",
+        "label": "Comfort",
+        "points": 7.7,
+        "maxPoints": 10.0
+      },
+      {
+        "key": "completeness",
+        "label": "Complete look",
+        "points": 13.8,
+        "maxPoints": 15.0
+      },
+      {
+        "key": "budget",
+        "label": "Budget friendliness",
+        "points": 4.0,
+        "maxPoints": 10.0
+      }
+    ],
+    "whyItWorks": [
+      "Maroon Silk Saree: you tagged Maroon Silk Saree for wedding, and it fits the wedding dress level.",
+      "The colours sit well together: neutrals and tonal shades keep it cohesive.",
+      "Includes your favourite colour: Red.",
+      "Matches your traditional style preference (Maroon Silk Saree).",
+      "Optional purchases total ₹2,999 (demo prices), within your budget of ₹3,000.",
+      "Coordinated jewellery, a clutch and dressy footwear complete a wedding look."
+    ],
+    "occasion": "wedding",
+    "occasionLabel": "Wedding",
+    "resolvedOccasion": "wedding",
+    "preferences": {
+      "occasion": "wedding",
+      "customOccasion": null,
+      "style": "traditional",
+      "colors": [
+        "Red"
+      ],
+      "budget": "1500-3000",
+      "comfort": "medium",
+      "traits": [],
+      "notes": ""
+    },
+    "appearance": null,
+    "items": [
+      {
+        "slot": "outfit",
+        "title": "Maroon Silk Saree",
+        "category": "outfit",
+        "detail": "Suggested purchase: Maroon Silk Saree · demo price ₹2,999",
+        "image": "/images/shop/silk-saree.jpg",
+        "source": "shopping",
+        "pieces": [
+          {
+            "category": "sarees",
+            "name": "Maroon Silk Saree",
+            "subcategory": "saree",
+            "colors": [
+              "Maroon",
+              "Gold"
+            ],
+            "fabric": "Silk",
+            "image": "/images/shop/silk-saree.jpg",
+            "source": "shopping",
+            "wardrobeItemId": null,
+            "shopItemId": "shop-silk-saree",
+            "price": 2999.0
+          }
+        ],
+        "wardrobeItemIds": [],
+        "shopItemId": "shop-silk-saree"
+      },
+      {
+        "slot": "footwear",
+        "title": "Heels",
+        "category": "footwear",
+        "detail": "Beige faux leather",
+        "image": "/images/items/heels.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "footwear",
+            "name": "Heels",
+            "subcategory": "heels",
+            "colors": [
+              "Beige"
+            ],
+            "fabric": "Faux leather",
+            "image": "/images/items/heels.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-heels",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-heels"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "bag",
+        "title": "Handbag",
+        "category": "bags",
+        "detail": "Pink faux leather",
+        "image": "/images/items/handbag.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "bags",
+            "name": "Handbag",
+            "subcategory": "handbag",
+            "colors": [
+              "Pink"
+            ],
+            "fabric": "Faux leather",
+            "image": "/images/items/handbag.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-handbag",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-handbag"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "jewellery",
+        "title": "Earrings",
+        "category": "jewellery",
+        "detail": "Gold metal",
+        "image": "/images/items/earrings.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "jewellery",
+            "name": "Earrings",
+            "subcategory": "earrings",
+            "colors": [
+              "Gold"
+            ],
+            "fabric": "Metal",
+            "image": "/images/items/earrings.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-earrings",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-earrings"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "makeup",
+        "title": "Radiant Festive Glam",
+        "category": "makeup",
+        "detail": "Luminous base, kohl-lined eyes and a rose or red lip. · Uses your Lipstick, Foundation",
+        "image": "/images/items/lipstick.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "makeup",
+            "name": "Lipstick",
+            "subcategory": "lipstick",
+            "colors": [
+              "Red"
+            ],
+            "fabric": "",
+            "image": "/images/items/lipstick.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-lipstick",
+            "shopItemId": null,
+            "price": null
+          },
+          {
+            "category": "makeup",
+            "name": "Foundation",
+            "subcategory": "foundation",
+            "colors": [
+              "Beige"
+            ],
+            "fabric": "",
+            "image": "/images/items/foundation.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-foundation",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-lipstick",
+          "demo-foundation"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "hairstyle",
+        "title": "Low Bun with Flowers",
+        "category": "hairstyle",
+        "detail": "Classic and camera-ready; pin fresh flowers last. · Finish with your Hair Serum",
+        "image": "/images/look/hairstyle.jpg",
+        "source": "tip",
+        "pieces": [],
+        "wardrobeItemIds": [],
+        "shopItemId": null
+      }
+    ],
+    "accessories": [
+      {
+        "category": "bags",
+        "name": "Handbag",
+        "subcategory": "handbag",
+        "colors": [
+          "Pink"
+        ],
+        "fabric": "Faux leather",
+        "image": "/images/items/handbag.jpg",
+        "source": "wardrobe",
+        "wardrobeItemId": "demo-handbag",
+        "shopItemId": null,
+        "price": null
+      },
+      {
+        "category": "jewellery",
+        "name": "Earrings",
+        "subcategory": "earrings",
+        "colors": [
+          "Gold"
+        ],
+        "fabric": "Metal",
+        "image": "/images/items/earrings.jpg",
+        "source": "wardrobe",
+        "wardrobeItemId": "demo-earrings",
+        "shopItemId": null,
+        "price": null
+      }
+    ],
+    "stylingTips": [
+      "Pick one hero piece: either heavy jewellery or a heavy outfit, not both.",
+      "Break in new footwear at home before the day.",
+      "Pin fresh flowers last so they stay crisp.",
+      "You picked Red. Repeat it in a small accessory such as a lip colour or bag for a cohesive finish."
+    ],
+    "missingItems": [],
+    "suggestedTotal": 2999.0,
+    "budgetMax": 3000.0,
+    "image": null,
+    "generatedAt": "2026-10-26T09:00:00.000Z",
+    "favorite": false,
+    "savedAt": "2026-10-26T09:00:00.000Z",
+    "isSample": true
+  },
+  {
+    "id": "seed-party",
+    "requestId": "req-99881f654077",
+    "rank": 1,
+    "title": "Party Elegant Look · Floral Dress",
+    "score": 86.0,
+    "scoreLabel": "Excellent match",
+    "breakdown": [
+      {
+        "key": "occasion",
+        "label": "Occasion fit",
+        "points": 31.4,
+        "maxPoints": 35.0
+      },
+      {
+        "key": "color",
+        "label": "Colour harmony",
+        "points": 8.6,
+        "maxPoints": 17.0
+      },
+      {
+        "key": "style",
+        "label": "Style match",
+        "points": 13.0,
+        "maxPoints": 13.0
+      },
+      {
+        "key": "comfort",
+        "label": "Comfort",
+        "points": 8.0,
+        "maxPoints": 10.0
+      },
+      {
+        "key": "completeness",
+        "label": "Complete look",
+        "points": 15.0,
+        "maxPoints": 15.0
+      },
+      {
+        "key": "budget",
+        "label": "Budget friendliness",
+        "points": 10.0,
+        "maxPoints": 10.0
+      }
+    ],
+    "whyItWorks": [
+      "Floral Dress: you tagged Floral Dress for party, and it fits the party dress level.",
+      "The colours work together with a little contrast; keep accessories simple.",
+      "None of your wardrobe pieces for this look are Black, so colour was matched on harmony instead.",
+      "Matches your elegant style preference (Floral Dress).",
+      "Built entirely from pieces you already own. Nothing to buy.",
+      "Statement accessories and matching footwear do the heavy lifting."
+    ],
+    "occasion": "party",
+    "occasionLabel": "Party",
+    "resolvedOccasion": "party",
+    "preferences": {
+      "occasion": "party",
+      "customOccasion": null,
+      "style": "elegant",
+      "colors": [
+        "Black"
+      ],
+      "budget": "1500-3000",
+      "comfort": "medium",
+      "traits": [
+        "trendy"
+      ],
+      "notes": ""
+    },
+    "appearance": null,
+    "items": [
+      {
+        "slot": "outfit",
+        "title": "Floral Dress",
+        "category": "outfit",
+        "detail": "Blue chiffon",
+        "image": "/images/items/floral-dress.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "dresses",
+            "name": "Floral Dress",
+            "subcategory": "casual dress",
+            "colors": [
+              "Blue"
+            ],
+            "fabric": "Chiffon",
+            "image": "/images/items/floral-dress.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-floral-dress",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-floral-dress"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "footwear",
+        "title": "Heels",
+        "category": "footwear",
+        "detail": "Beige faux leather",
+        "image": "/images/items/heels.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "footwear",
+            "name": "Heels",
+            "subcategory": "heels",
+            "colors": [
+              "Beige"
+            ],
+            "fabric": "Faux leather",
+            "image": "/images/items/heels.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-heels",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-heels"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "bag",
+        "title": "Handbag",
+        "category": "bags",
+        "detail": "Pink faux leather",
+        "image": "/images/items/handbag.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "bags",
+            "name": "Handbag",
+            "subcategory": "handbag",
+            "colors": [
+              "Pink"
+            ],
+            "fabric": "Faux leather",
+            "image": "/images/items/handbag.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-handbag",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-handbag"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "jewellery",
+        "title": "Earrings",
+        "category": "jewellery",
+        "detail": "Gold metal",
+        "image": "/images/items/earrings.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "jewellery",
+            "name": "Earrings",
+            "subcategory": "earrings",
+            "colors": [
+              "Gold"
+            ],
+            "fabric": "Metal",
+            "image": "/images/items/earrings.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-earrings",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-earrings"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "makeup",
+        "title": "Defined Eyes and Bold Lip",
+        "category": "makeup",
+        "detail": "Winged liner, highlighter and a rich lip colour. · Uses your Foundation, Compact",
+        "image": "/images/items/foundation.jpg",
+        "source": "wardrobe",
+        "pieces": [
+          {
+            "category": "makeup",
+            "name": "Foundation",
+            "subcategory": "foundation",
+            "colors": [
+              "Beige"
+            ],
+            "fabric": "",
+            "image": "/images/items/foundation.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-foundation",
+            "shopItemId": null,
+            "price": null
+          },
+          {
+            "category": "makeup",
+            "name": "Compact",
+            "subcategory": "compact",
+            "colors": [
+              "Pink"
+            ],
+            "fabric": "",
+            "image": "/images/items/compact.jpg",
+            "source": "wardrobe",
+            "wardrobeItemId": "demo-compact",
+            "shopItemId": null,
+            "price": null
+          }
+        ],
+        "wardrobeItemIds": [
+          "demo-foundation",
+          "demo-compact"
+        ],
+        "shopItemId": null
+      },
+      {
+        "slot": "hairstyle",
+        "title": "Sleek Waves",
+        "category": "hairstyle",
+        "detail": "Glossy, brushed-out curls. · Finish with your Hair Serum",
+        "image": "/images/look/hairstyle.jpg",
+        "source": "tip",
+        "pieces": [],
+        "wardrobeItemIds": [],
+        "shopItemId": null
+      }
+    ],
+    "accessories": [
+      {
+        "category": "bags",
+        "name": "Handbag",
+        "subcategory": "handbag",
+        "colors": [
+          "Pink"
+        ],
+        "fabric": "Faux leather",
+        "image": "/images/items/handbag.jpg",
+        "source": "wardrobe",
+        "wardrobeItemId": "demo-handbag",
+        "shopItemId": null,
+        "price": null
+      },
+      {
+        "category": "jewellery",
+        "name": "Earrings",
+        "subcategory": "earrings",
+        "colors": [
+          "Gold"
+        ],
+        "fabric": "Metal",
+        "image": "/images/items/earrings.jpg",
+        "source": "wardrobe",
+        "wardrobeItemId": "demo-earrings",
+        "shopItemId": null,
+        "price": null
+      }
+    ],
+    "stylingTips": [
+      "If the outfit is bold, keep the jewellery to one standout piece.",
+      "Carry lipstick for quick touch-ups.",
+      "Choose fabrics that do not cling when you dance.",
+      "You like Black. Try adding it through a scarf, dupatta or nail colour."
+    ],
+    "missingItems": [],
+    "suggestedTotal": 0.0,
+    "budgetMax": 3000.0,
+    "image": null,
+    "generatedAt": "2026-10-25T09:00:00.000Z",
+    "favorite": true,
+    "savedAt": "2026-10-25T09:00:00.000Z",
+    "isSample": true
+  }
+]

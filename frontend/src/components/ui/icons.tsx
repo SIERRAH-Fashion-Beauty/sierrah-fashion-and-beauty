@@ -72,7 +72,10 @@ export const CATEGORY_ICONS: Record<WardrobeCategory, (p: LucideProps) => React.
   footwear: HeelIcon,
   bags: (p) => <Handbag {...p} strokeWidth={p.strokeWidth ?? 1.5} />,
   jewellery: (p) => <Gem {...p} strokeWidth={p.strokeWidth ?? 1.5} />,
-  beauty: PerfumeIcon,
+  kurtis: (p) => <Shirt {...p} strokeWidth={p.strokeWidth ?? 1.5} />,
+  sarees: DressIcon,
+  makeup: LipstickIcon,
+  skincare: PerfumeIcon,
 };
 
 export function CategoryIcon({ category, ...props }: { category: WardrobeCategory } & LucideProps) {

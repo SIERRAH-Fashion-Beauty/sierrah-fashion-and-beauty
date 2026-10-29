@@ -4,7 +4,9 @@ export const STORAGE_KEYS = {
   wardrobe: 'wardrobe',
   saved: 'saved-looks',
   preferences: 'preferences',
-  currentLook: 'current-look',
+  /** Latest recommendation (all outfit options). */
+  session: 'look-session',
+  modelOptions: 'model-options',
   /** True when local changes have not reached the backend yet. */
   dirty: 'dirty-sync',
 } as const;
